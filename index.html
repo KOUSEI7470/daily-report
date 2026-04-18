@@ -19,17 +19,17 @@
 
         <div class="form-grid">
           <div class="form-group">
-            <label for="workDate">日付</label>
+            <label for="workDate">日付（曜日）</label>
             <input type="date" id="workDate" />
             <div id="datePreview" class="sub-text">日付を選択してください</div>
           </div>
 
-          <div class="form-group">
+          <div class="form-group full">
             <label for="destinationCompany">行先会社名</label>
             <input type="text" id="destinationCompany" placeholder="例：〇〇建設" />
           </div>
 
-          <div class="form-group">
+          <div class="form-group full">
             <label for="siteName">現場名</label>
             <input type="text" id="siteName" placeholder="例：〇〇港補修工事" />
           </div>
@@ -44,19 +44,19 @@
             <input type="text" id="primeCompany" placeholder="例：〇〇マリン" />
           </div>
 
-          <div class="form-group">
+          <div class="form-group full">
             <label for="startTime">始業時間</label>
             <input type="time" id="startTime" />
           </div>
 
-          <div class="form-group">
+          <div class="form-group full">
             <label for="endTime">終業時間</label>
             <input type="time" id="endTime" />
           </div>
 
           <div class="form-group full">
             <label for="otherNote">その他</label>
-            <textarea id="otherNote" rows="5" placeholder="連絡事項、作業内容、注意点などを入力"></textarea>
+            <textarea id="otherNote" rows="4" placeholder="連絡事項、作業内容、注意点などを入力"></textarea>
           </div>
         </div>
       </section>
@@ -83,7 +83,6 @@
     </main>
   </div>
 
-  <!-- SheetJS -->
   <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
   <script src="script.js"></script>
 </body>
