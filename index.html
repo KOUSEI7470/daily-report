@@ -1,26 +1,86 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>作業日報</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>作業日報入力</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="container">
-    <h1>作業日報</h1>
+  <div class="app">
+    <header class="app-header">
+      <h1>作業日報</h1>
+      <p>スマホ入力用</p>
+    </header>
 
-    <label>日付</label>
-    <input type="date" id="workDate">
+    <main class="container">
+      <section class="card">
+        <h2 class="section-title">基本情報</h2>
 
-    <label>現場名</label>
-    <input type="text" id="siteName">
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="workDate">日付</label>
+            <input type="date" id="workDate" />
+            <div id="datePreview" class="sub-text">日付を選択してください</div>
+          </div>
 
-    <div id="sections"></div>
+          <div class="form-group">
+            <label for="destinationCompany">行先会社名</label>
+            <input type="text" id="destinationCompany" placeholder="例：〇〇建設" />
+          </div>
 
-    <button id="confirmButton">確認</button>
+          <div class="form-group">
+            <label for="siteName">現場名</label>
+            <input type="text" id="siteName" placeholder="例：〇〇港補修工事" />
+          </div>
 
-    <pre id="result"></pre>
+          <div class="form-group">
+            <label for="meetingPlace">集合場所</label>
+            <input type="text" id="meetingPlace" placeholder="例：本社前" />
+          </div>
+
+          <div class="form-group">
+            <label for="primeCompany">元請会社名</label>
+            <input type="text" id="primeCompany" placeholder="例：〇〇マリン" />
+          </div>
+
+          <div class="form-group">
+            <label for="startTime">始業時間</label>
+            <input type="time" id="startTime" />
+          </div>
+
+          <div class="form-group">
+            <label for="endTime">終業時間</label>
+            <input type="time" id="endTime" />
+          </div>
+
+          <div class="form-group full">
+            <label for="otherNote">その他</label>
+            <textarea id="otherNote" rows="5" placeholder="連絡事項、作業内容、注意点などを入力"></textarea>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2 class="section-title">作業員選択</h2>
+
+        <div id="workerSections" class="worker-sections"></div>
+      </section>
+
+      <section class="card">
+        <div class="action-row">
+          <button id="clearButton" class="main-button secondary-button" type="button">全てクリア</button>
+          <button id="summaryButton" class="main-button" type="button">入力内容を整理表示</button>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2 class="section-title">整理表示</h2>
+        <div id="summaryArea" class="summary-area">
+          まだ表示されていません
+        </div>
+      </section>
+    </main>
   </div>
 
   <script src="script.js"></script>

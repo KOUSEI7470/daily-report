@@ -1,100 +1,251 @@
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  --bg1: #0b4f8a;
+  --bg2: #1373b7;
+  --bg3: #5cb7e8;
+  --card: rgba(255, 255, 255, 0.14);
+  --card-border: rgba(255, 255, 255, 0.18);
+  --input-bg: #eef8ff;
+  --input-border: #b7d8ea;
+  --text: #08324f;
+  --text-light: #eff9ff;
+  --muted: #6b7c8a;
+  --shadow: 0 10px 28px rgba(0, 0, 0, 0.16);
+  --btn-off: #c8d2da;
+  --btn-off-text: #41505c;
+  --btn-on: #1675c1;
+  --btn-on-text: #ffffff;
+  --accent: #0d5f9c;
+}
+
 body {
   margin: 0;
-  padding: 10px;
-  background: #eef2f7;
-  font-family: sans-serif;
+  font-family: "Yu Gothic UI", "Yu Gothic", "Meiryo", sans-serif;
+  background: linear-gradient(160deg, var(--bg1), var(--bg2), var(--bg3));
+  min-height: 100vh;
+  color: var(--text-light);
+}
+
+.app {
+  min-height: 100vh;
+  padding: 18px 14px 32px;
+}
+
+.app-header {
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.app-header h1 {
+  margin: 0;
+  font-size: 1.9rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.app-header p {
+  margin: 6px 0 0;
+  font-size: 0.95rem;
+  opacity: 0.9;
 }
 
 .container {
-  max-width: 900px;
+  max-width: 960px;
   margin: 0 auto;
-  background: #ffffff;
-  border-radius: 12px;
-  padding: 12px;
 }
 
-h1 {
-  font-size: 20px;
-  text-align: center;
-  margin-bottom: 10px;
-}
-
-label {
-  font-size: 13px;
-  font-weight: bold;
-}
-
-input {
-  width: 100%;
-  padding: 8px;
-  margin-bottom: 8px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-}
-
-/* ▼ 各セクション */
-.section {
-  margin-top: 10px;
+.card {
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: 18px;
+  backdrop-filter: blur(8px);
+  box-shadow: var(--shadow);
+  padding: 16px;
+  margin-bottom: 16px;
 }
 
 .section-title {
-  font-size: 14px;
-  font-weight: bold;
-  margin-bottom: 4px;
+  margin: 0 0 14px;
+  font-size: 1.2rem;
+  color: #ffffff;
 }
 
-/* ▼ ボタン配置（3列） */
-.name-grid {
+.form-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 3px;
+  grid-template-columns: 1fr;
+  gap: 14px;
 }
 
-/* ▼ ボタン（小さめ） */
-.name-button {
-  height: 28px;
-  font-size: 11px;
-  border-radius: 6px;
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group.full {
+  grid-column: 1 / -1;
+}
+
+label {
+  margin-bottom: 6px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #f4fbff;
+}
+
+input,
+textarea {
+  width: 100%;
+  border: 1px solid var(--input-border);
+  background: var(--input-bg);
+  color: var(--text);
+  border-radius: 12px;
+  padding: 12px 14px;
+  font-size: 16px;
+  outline: none;
+  transition: 0.2s ease;
+}
+
+input:focus,
+textarea:focus {
+  border-color: #66afe0;
+  box-shadow: 0 0 0 4px rgba(133, 198, 239, 0.28);
+}
+
+textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+.sub-text {
+  margin-top: 6px;
+  font-size: 0.88rem;
+  color: #e8f6ff;
+  opacity: 0.95;
+}
+
+.worker-sections {
+  display: grid;
+  gap: 18px;
+}
+
+.worker-block {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.worker-title {
+  margin: 0 0 10px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.worker-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.worker-button {
+  appearance: none;
   border: none;
-  background: #d1d5db;
-  color: #555;
+  border-radius: 14px;
+  padding: 14px 10px;
+  font-size: 0.96rem;
+  font-weight: 700;
   cursor: pointer;
-
-  /* 押されてない＝へこみ */
-  box-shadow:
-    inset 2px 2px 4px rgba(0,0,0,0.2),
-    inset -2px -2px 4px rgba(255,255,255,0.7);
+  background: var(--btn-off);
+  color: var(--btn-off-text);
+  box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.08);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+  min-height: 52px;
 }
 
-/* ▼ 選択時（浮き上がる） */
-.name-button.selected {
-  background: #2563eb;
-  color: white;
-
-  box-shadow:
-    0 3px 6px rgba(0,0,0,0.3);
-
+.worker-button:hover {
   transform: translateY(-1px);
 }
 
-/* ▼ 押した瞬間 */
-.name-button:active {
-  transform: scale(0.95);
+.worker-button:active {
+  transform: scale(0.98);
 }
 
-/* ▼ 確認ボタン */
-#confirmButton {
-  width: 100%;
-  margin-top: 10px;
-  padding: 10px;
-  font-size: 14px;
-  background: #111827;
-  color: white;
-  border-radius: 8px;
+.worker-button.active {
+  background: var(--btn-on);
+  color: var(--btn-on-text);
+  box-shadow: 0 8px 18px rgba(7, 56, 95, 0.28);
+}
+
+.action-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.main-button {
+  flex: 1;
+  min-width: 140px;
   border: none;
+  border-radius: 14px;
+  padding: 14px 16px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  background: #0f6eb7;
+  color: #ffffff;
+  box-shadow: 0 8px 18px rgba(7, 56, 95, 0.26);
+  transition: transform 0.15s ease, opacity 0.15s ease;
 }
 
-#result {
+.main-button:hover {
+  opacity: 0.95;
+}
+
+.main-button:active {
+  transform: scale(0.98);
+}
+
+.secondary-button {
+  background: #7d96a8;
+}
+
+.summary-area {
+  background: #eef8ff;
+  color: var(--text);
+  border-radius: 14px;
+  padding: 14px;
+  min-height: 120px;
+  white-space: pre-wrap;
+  line-height: 1.7;
+  font-size: 0.97rem;
+}
+
+.summary-title {
+  font-weight: 700;
   margin-top: 10px;
-  font-size: 12px;
+}
+
+.summary-list {
+  margin: 4px 0 10px;
+  padding-left: 1.2em;
+}
+
+@media (min-width: 700px) {
+  .form-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .worker-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 980px) {
+  .worker-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
 }
