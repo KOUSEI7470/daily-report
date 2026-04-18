@@ -3,22 +3,30 @@
 }
 
 :root {
-  --bg1: #0b4f8a;
-  --bg2: #1373b7;
-  --bg3: #5cb7e8;
-  --card: rgba(255, 255, 255, 0.14);
+  --bg1: #0a4a7a;
+  --bg2: #0f6aa8;
+  --bg3: #6bc1ea;
+
+  --card: rgba(255, 255, 255, 0.13);
   --card-border: rgba(255, 255, 255, 0.18);
-  --input-bg: #eef8ff;
-  --input-border: #b7d8ea;
+
+  --input-bg: #eef7fc;
+  --input-border: #b8d6e7;
+
   --text: #08324f;
   --text-light: #eff9ff;
-  --muted: #6b7c8a;
-  --shadow: 0 10px 28px rgba(0, 0, 0, 0.16);
-  --btn-off: #c8d2da;
-  --btn-off-text: #41505c;
-  --btn-on: #1675c1;
+
+  --shadow: 0 10px 24px rgba(0, 0, 0, 0.14);
+
+  --btn-off-bg1: #d9e2e8;
+  --btn-off-bg2: #c9d3da;
+  --btn-off-text: #3f4d58;
+
+  --btn-on-bg1: #1f88d1;
+  --btn-on-bg2: #0f68ad;
   --btn-on-text: #ffffff;
-  --accent: #0d5f9c;
+
+  --title-line: rgba(255, 255, 255, 0.24);
 }
 
 body {
@@ -31,25 +39,25 @@ body {
 
 .app {
   min-height: 100vh;
-  padding: 18px 14px 32px;
+  padding: 10px 10px 20px;
 }
 
 .app-header {
   text-align: center;
-  margin-bottom: 16px;
+  margin-bottom: 10px;
 }
 
 .app-header h1 {
   margin: 0;
-  font-size: 1.9rem;
+  font-size: 1.55rem;
   font-weight: 700;
   letter-spacing: 0.04em;
 }
 
 .app-header p {
-  margin: 6px 0 0;
-  font-size: 0.95rem;
-  opacity: 0.9;
+  margin: 4px 0 0;
+  font-size: 0.86rem;
+  opacity: 0.92;
 }
 
 .container {
@@ -60,23 +68,25 @@ body {
 .card {
   background: var(--card);
   border: 1px solid var(--card-border);
-  border-radius: 18px;
+  border-radius: 16px;
   backdrop-filter: blur(8px);
   box-shadow: var(--shadow);
-  padding: 16px;
-  margin-bottom: 16px;
+  padding: 12px;
+  margin-bottom: 10px;
 }
 
 .section-title {
-  margin: 0 0 14px;
-  font-size: 1.2rem;
+  margin: 0 0 10px;
+  font-size: 1.05rem;
   color: #ffffff;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--title-line);
 }
 
 .form-grid {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 14px;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
 }
 
 .form-group {
@@ -89,8 +99,8 @@ body {
 }
 
 label {
-  margin-bottom: 6px;
-  font-size: 0.95rem;
+  margin-bottom: 4px;
+  font-size: 0.88rem;
   font-weight: 700;
   color: #f4fbff;
 }
@@ -101,8 +111,8 @@ textarea {
   border: 1px solid var(--input-border);
   background: var(--input-bg);
   color: var(--text);
-  border-radius: 12px;
-  padding: 12px 14px;
+  border-radius: 10px;
+  padding: 10px 12px;
   font-size: 16px;
   outline: none;
   transition: 0.2s ease;
@@ -110,60 +120,69 @@ textarea {
 
 input:focus,
 textarea:focus {
-  border-color: #66afe0;
-  box-shadow: 0 0 0 4px rgba(133, 198, 239, 0.28);
+  border-color: #6eb7e3;
+  box-shadow: 0 0 0 4px rgba(120, 190, 235, 0.22);
 }
 
 textarea {
   resize: vertical;
-  min-height: 120px;
+  min-height: 84px;
 }
 
 .sub-text {
-  margin-top: 6px;
-  font-size: 0.88rem;
+  margin-top: 4px;
+  font-size: 0.8rem;
   color: #e8f6ff;
-  opacity: 0.95;
+  opacity: 0.96;
 }
 
 .worker-sections {
   display: grid;
-  gap: 18px;
+  gap: 10px;
 }
 
 .worker-block {
   background: rgba(255, 255, 255, 0.08);
-  border-radius: 16px;
-  padding: 14px;
+  border-radius: 14px;
+  padding: 10px;
   border: 1px solid rgba(255, 255, 255, 0.12);
 }
 
 .worker-title {
-  margin: 0 0 10px;
-  font-size: 1.05rem;
+  margin: 0 0 8px;
+  font-size: 0.98rem;
   font-weight: 700;
   color: #ffffff;
 }
 
 .worker-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 10px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
 }
 
 .worker-button {
   appearance: none;
-  border: none;
-  border-radius: 14px;
-  padding: 14px 10px;
-  font-size: 0.96rem;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 12px;
+  padding: 10px 6px;
+  min-height: 48px;
+  font-size: 0.84rem;
   font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0.01em;
   cursor: pointer;
-  background: var(--btn-off);
   color: var(--btn-off-text);
-  box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.08);
-  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
-  min-height: 52px;
+  background: linear-gradient(180deg, var(--btn-off-bg1), var(--btn-off-bg2));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.6),
+    0 3px 8px rgba(0, 0, 0, 0.08);
+  transition:
+    transform 0.12s ease,
+    box-shadow 0.12s ease,
+    background 0.12s ease,
+    color 0.12s ease;
+  word-break: keep-all;
 }
 
 .worker-button:hover {
@@ -171,38 +190,39 @@ textarea {
 }
 
 .worker-button:active {
-  transform: scale(0.98);
+  transform: translateY(1px) scale(0.98);
 }
 
 .worker-button.active {
-  background: var(--btn-on);
   color: var(--btn-on-text);
-  box-shadow: 0 8px 18px rgba(7, 56, 95, 0.28);
+  background: linear-gradient(180deg, var(--btn-on-bg1), var(--btn-on-bg2));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.28),
+    0 8px 16px rgba(5, 55, 95, 0.28);
+  border-color: rgba(255, 255, 255, 0.22);
 }
 
 .action-row {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
 }
 
 .main-button {
-  flex: 1;
-  min-width: 140px;
   border: none;
-  border-radius: 14px;
-  padding: 14px 16px;
-  font-size: 1rem;
+  border-radius: 12px;
+  padding: 12px 10px;
+  font-size: 0.92rem;
   font-weight: 700;
   cursor: pointer;
   background: #0f6eb7;
   color: #ffffff;
-  box-shadow: 0 8px 18px rgba(7, 56, 95, 0.26);
+  box-shadow: 0 8px 18px rgba(7, 56, 95, 0.24);
   transition: transform 0.15s ease, opacity 0.15s ease;
 }
 
 .main-button:hover {
-  opacity: 0.95;
+  opacity: 0.96;
 }
 
 .main-button:active {
@@ -220,26 +240,49 @@ textarea {
 .summary-area {
   background: #eef8ff;
   color: var(--text);
-  border-radius: 14px;
-  padding: 14px;
-  min-height: 120px;
+  border-radius: 12px;
+  padding: 12px;
+  min-height: 88px;
   white-space: pre-wrap;
-  line-height: 1.7;
-  font-size: 0.97rem;
+  line-height: 1.55;
+  font-size: 0.92rem;
 }
 
-@media (min-width: 700px) {
+@media (max-width: 520px) {
+  .app {
+    padding: 8px 8px 18px;
+  }
+
+  .card {
+    padding: 10px;
+    border-radius: 14px;
+  }
+
   .form-grid {
-    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
   }
 
-  .worker-grid {
-    grid-template-columns: repeat(3, 1fr);
+  input,
+  textarea {
+    padding: 9px 10px;
   }
-}
 
-@media (min-width: 980px) {
   .worker-grid {
     grid-template-columns: repeat(4, 1fr);
+    gap: 7px;
+  }
+
+  .worker-button {
+    min-height: 44px;
+    padding: 8px 4px;
+    font-size: 0.8rem;
+  }
+
+  .action-row {
+    grid-template-columns: 1fr;
+  }
+
+  .main-button {
+    width: 100%;
   }
 }
