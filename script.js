@@ -34,7 +34,10 @@ const summaryArea = document.getElementById("summaryArea");
 
 function setTodayDate() {
   const today = new Date();
-  workDate.value = formatDateWithWeekday(today);
+  const yyyy = today.getFullYear();
+  const mm = String(today.getMonth() + 1).padStart(2, "0");
+  const dd = String(today.getDate()).padStart(2, "0");
+  workDate.value = `${yyyy}-${mm}-${dd}`;
 }
 
 function formatDateWithWeekday(dateString) {
@@ -180,6 +183,7 @@ function clearAll() {
     button.classList.remove("active");
   });
 
+  workDate.type = "date";
   setTodayDate();
   summaryArea.textContent = "まだ表示されていません";
 }
@@ -322,8 +326,12 @@ function exportExcel() {
   const fileName = `${fileDate}_${fileSite}_作業日報.xlsx`;
 
   XLSX.writeFile(workbook, fileName);
-}
-
+workDate.addEventListener("change", () => {
+  if (workDate.value) {
+    workDate.type = "text";
+    workDate.value = formatDateWithWeekday(workDate.value);
+  }
+});
 summaryButton.addEventListener("click", showSummary);
 clearButton.addEventListener("click", clearAll);
 excelButton.addEventListener("click", exportExcel);
