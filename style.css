@@ -102,12 +102,29 @@ label {
 input,
 textarea {
   width: 100%;
-  padding: 4px 6px;
-  font-size: 13px;
-  border-radius: 6px;
+  padding: 8px;
+  font-size: 14px;
+  border-radius: 8px;
   border: 1px solid var(--input-border);
   background: var(--input-bg);
   color: var(--text);
+}
+
+/* 小さくする指定ボックス */
+#workDate,
+#destinationCompany,
+#meetingPlace,
+#startTime,
+#endTime {
+  height: 34px;
+  padding: 4px 8px;
+  font-size: 13px;
+}
+
+/* 現場名は広く使う */
+#siteName {
+  min-height: 40px;
+  font-size: 14px;
 }
 
 textarea {
@@ -121,42 +138,29 @@ textarea {
   color: #eaf7ff;
 }
 
-/* 現場名を長く取りやすく */
-#siteName {
-  min-height: 40px;
-}
-
-/* 小さなボックス */
-#workDate,
-#destinationCompany,
-#meetingPlace,
-#startTime,
-#endTime {
-  padding: 4px 6px;
-  font-size: 12px;
-  min-height: 28px;
-}
-
-/* 日付行のレイアウト */
+/* ===== 日付＋曜日表示 ===== */
 .date-row {
   display: flex;
-  gap: 6px;
   align-items: center;
-}
-
-.date-row #workDate {
-  flex: 1;
+  gap: 10px;
 }
 
 .date-inline {
-  font-size: 12px;
-  color: var(--text);
-  padding: 4px 6px;
-  background: var(--input-bg);
-  border-radius: 6px;
-  border: 1px solid var(--input-border);
-  min-width: 60px;
-  text-align: center;
+  font-size: 1rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.weekday {
+  color: #ffffff;
+}
+
+.sat {
+  color: #4fc3ff;
+}
+
+.sun {
+  color: #ff6b6b;
 }
 
 /* ===== 作業員ブロック ===== */
@@ -190,14 +194,11 @@ textarea {
   font-size: 0.75rem;
   font-weight: 700;
   line-height: 1.2;
-
   background: linear-gradient(180deg, var(--btn-off-bg1), var(--btn-off-bg2));
   color: var(--btn-off-text);
-
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.6),
-    0 2px 6px rgba(0,0,0,0.1);
-
+    inset 0 1px 0 rgba(255, 255, 255, 0.6),
+    0 2px 6px rgba(0, 0, 0, 0.1);
   transition: all 0.15s;
 }
 
@@ -208,7 +209,7 @@ textarea {
 .worker-button.active {
   background: linear-gradient(180deg, var(--btn-on-bg1), var(--btn-on-bg2));
   color: white;
-  box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
 }
 
 /* ===== ボタン行 ===== */
@@ -254,7 +255,6 @@ textarea {
     gap: 6px;
   }
 
-  /* スマホでは3列 */
   .worker-grid {
     grid-template-columns: repeat(3, 1fr);
   }
@@ -265,5 +265,9 @@ textarea {
 
   .main-button {
     width: 100%;
+  }
+
+  .date-inline {
+    font-size: 0.95rem;
   }
 }
