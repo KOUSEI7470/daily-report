@@ -12,8 +12,8 @@ const workerNames = [
 ];
 
 const categories = [
-  { key: "diving", label: "潜水作業員" },
-  { key: "land", label: "陸上作業員" },
+  { key: "diving", label: "潜水" },
+  { key: "land", label: "陸上" },
   { key: "standby", label: "待機" },
   { key: "move", label: "移動" }
 ];
@@ -30,6 +30,7 @@ const datePreview = document.getElementById("datePreview");
 const workerSections = document.getElementById("workerSections");
 const summaryButton = document.getElementById("summaryButton");
 const clearButton = document.getElementById("clearButton");
+const excelButton = document.getElementById("excelButton");
 const summaryArea = document.getElementById("summaryArea");
 
 function setTodayDate() {
@@ -54,6 +55,24 @@ function formatDateWithWeekday(dateString) {
   const w = weekdays[date.getDay()];
 
   return `${y}/${m}/${d}（${w}）`;
+}
+
+function formatDateSlash(dateString) {
+  if (!dateString) return "";
+  const date = new Date(dateString);
+  if (isNaN(date.getTime())) return "";
+  const y = date.getFullYear();
+  const m = date.getMonth() + 1;
+  const d = date.getDate();
+  return `${y}/${m}/${d}`;
+}
+
+function getWeekdayShort(dateString) {
+  if (!dateString) return "";
+  const date = new Date(dateString);
+  if (isNaN(date.getTime())) return "";
+  const weekdays = ["日", "月", "火", "水", "木", "金", "土"];
+  return weekdays[date.getDay()];
 }
 
 function updateDatePreview() {
@@ -137,8 +156,8 @@ function buildSummaryText() {
     `終業時間：${endTime || "未入力"}`,
     "",
     "【作業員分類】",
-    `潜水作業員：${formatWorkerList(selectedWorkers.diving)}`,
-    `陸上作業員：${formatWorkerList(selectedWorkers.land)}`,
+    `潜水：${formatWorkerList(selectedWorkers.diving)}`,
+    `陸上：${formatWorkerList(selectedWorkers.land)}`,
     `待機：${formatWorkerList(selectedWorkers.standby)}`,
     `移動：${formatWorkerList(selectedWorkers.move)}`,
     "",
@@ -172,9 +191,150 @@ function clearAll() {
   summaryArea.textContent = "まだ表示されていません";
 }
 
+function getFormData() {
+  return {
+    workDate: getInputValue("workDate"),
+    workDateText: formatDateWithWeekday(getInputValue("workDate")),
+    workDateSlash: formatDateSlash(getInputValue("workDate")),
+    weekday: getWeekdayShort(getInputValue("workDate")),
+    destinationCompany: getInputValue("destinationCompany"),
+    siteName: getInputValue("siteName"),
+    meetingPlace: getInputValue("meetingPlace"),
+    primeCompany: getInputValue("primeCompany"),
+    startTime: getInputValue("startTime"),
+    endTime: getInputValue("endTime"),
+    otherNote: getInputValue("otherNote"),
+    diving: Array.from(selectedWorkers.diving),
+    land: Array.from(selectedWorkers.land),
+    standby: Array.from(selectedWorkers.standby),
+    move: Array.from(selectedWorkers.move)
+  };
+}
+
+function buildDatabaseRows(data) {
+  const rows = [];
+  let number = 1;
+
+  categories.forEach((category) => {
+    const workers = data[category.key];
+
+    workers.forEach((workerName) => {
+      rows.push({
+        "日付": data.workDateSlash,
+        "曜日": data.weekday,
+        "番号": number,
+        "作業員名": workerName,
+        "種別": category.label,
+        "始業時間": data.startTime || "",
+        "終業時間": data.endTime || "",
+        "残業": "",
+        "行先会社名": data.destinationCompany || "",
+        "集合場所": data.meetingPlace || "",
+        "元請名": data.primeCompany || "",
+        "現場名": data.siteName || "",
+        "作業内容": data.otherNote || "",
+        "使用器材": ""
+      });
+      number += 1;
+    });
+  });
+
+  return rows;
+}
+
+function buildReportSheetData(data) {
+  return [
+    ["作業日報"],
+    [""],
+    ["日付", data.workDateText],
+    ["行先会社名", data.destinationCompany || ""],
+    ["現場名", data.siteName || ""],
+    ["集合場所", data.meetingPlace || ""],
+    ["元請会社名", data.primeCompany || ""],
+    ["始業時間", data.startTime || ""],
+    ["終業時間", data.endTime || ""],
+    [""],
+    ["潜水", data.diving.length ? data.diving.join("、") : "なし"],
+    ["陸上", data.land.length ? data.land.join("、") : "なし"],
+    ["待機", data.standby.length ? data.standby.join("、") : "なし"],
+    ["移動", data.move.length ? data.move.join("、") : "なし"],
+    [""],
+    ["その他", data.otherNote || ""]
+  ];
+}
+
+function sanitizeFileName(text) {
+  return (text || "現場名未入力")
+    .replace(/[\\/:*?"<>|]/g, "")
+    .replace(/\s+/g, "_");
+}
+
+function exportExcel() {
+  const data = getFormData();
+
+  if (!data.workDate) {
+    alert("日付を入力してください。");
+    return;
+  }
+
+  const selectedCount =
+    data.diving.length +
+    data.land.length +
+    data.standby.length +
+    data.move.length;
+
+  if (selectedCount === 0) {
+    alert("作業員を1人以上選択してください。");
+    return;
+  }
+
+  const workbook = XLSX.utils.book_new();
+
+  // 日報シート
+  const reportData = buildReportSheetData(data);
+  const reportSheet = XLSX.utils.aoa_to_sheet(reportData);
+
+  reportSheet["!cols"] = [
+    { wch: 16 },
+    { wch: 45 }
+  ];
+
+  XLSX.utils.book_append_sheet(workbook, reportSheet, "日報");
+
+  // データベース用シート
+  const databaseRows = buildDatabaseRows(data);
+  const databaseSheet = XLSX.utils.json_to_sheet(databaseRows);
+
+  databaseSheet["!cols"] = [
+    { wch: 12 }, // 日付
+    { wch: 8 },  // 曜日
+    { wch: 8 },  // 番号
+    { wch: 14 }, // 作業員名
+    { wch: 10 }, // 種別
+    { wch: 10 }, // 始業時間
+    { wch: 10 }, // 終業時間
+    { wch: 8 },  // 残業
+    { wch: 18 }, // 行先会社名
+    { wch: 18 }, // 集合場所
+    { wch: 18 }, // 元請名
+    { wch: 22 }, // 現場名
+    { wch: 40 }, // 作業内容
+    { wch: 16 }  // 使用器材
+  ];
+
+  XLSX.utils.book_append_sheet(workbook, databaseSheet, "データベース用");
+
+  const fileDate = data.workDateSlash.replace(/\//g, "-");
+  const fileSite = sanitizeFileName(data.siteName);
+  const fileName = `${fileDate}_${fileSite}_作業日報.xlsx`;
+
+  XLSX.writeFile(workbook, fileName);
+}
+
 workDate.addEventListener("change", updateDatePreview);
 summaryButton.addEventListener("click", showSummary);
 clearButton.addEventListener("click", clearAll);
+excelButton.addEventListener("click", exportExcel);
 
 createWorkerSections();
 setTodayDate();

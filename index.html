@@ -63,7 +63,6 @@
 
       <section class="card">
         <h2 class="section-title">作業員選択</h2>
-
         <div id="workerSections" class="worker-sections"></div>
       </section>
 
@@ -71,6 +70,7 @@
         <div class="action-row">
           <button id="clearButton" class="main-button secondary-button" type="button">全てクリア</button>
           <button id="summaryButton" class="main-button" type="button">入力内容を整理表示</button>
+          <button id="excelButton" class="main-button excel-button" type="button">Excel出力</button>
         </div>
       </section>
 
@@ -83,6 +83,8 @@
     </main>
   </div>
 
+  <!-- SheetJS -->
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
