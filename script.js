@@ -1,3 +1,6 @@
+// ==============================
+// 作業員名
+// ==============================
 const workerNames = [
   "藤田大伸",
   "千種克典",
@@ -11,13 +14,19 @@ const workerNames = [
   "田中昇翔"
 ];
 
+// ==============================
+// 分類（表示順がそのまま画面順）
+// ==============================
 const categories = [
-  { key: "diving", label: "潜水" },
-  { key: "land", label: "陸上" },
-  { key: "standby", label: "待機" },
-  { key: "move", label: "移動" }
+  { key: "diving", label: "潜水作業員", shortLabel: "潜水" },
+  { key: "land", label: "陸上作業員", shortLabel: "陸上" },
+  { key: "standby", label: "待機", shortLabel: "待機" },
+  { key: "move", label: "移動", shortLabel: "移動" }
 ];
 
+// ==============================
+// 選択状態
+// ==============================
 const selectedWorkers = {
   diving: new Set(),
   land: new Set(),
@@ -25,41 +34,42 @@ const selectedWorkers = {
   move: new Set()
 };
 
-const workDate = document.getElementById("workDate");
-const workerSections = document.getElementById("workerSections");
-const summaryButton = document.getElementById("summaryButton");
-const clearButton = document.getElementById("clearButton");
-const excelButton = document.getElementById("excelButton");
-const summaryArea = document.getElementById("summaryArea");
+// ==============================
+// 要素取得
+// ==============================
+const els = {
+  workDate: document.getElementById("workDate"),
+  datePreview: document.getElementById("datePreview"),
+  destinationCompany: document.getElementById("destinationCompany"),
+  siteName: document.getElementById("siteName"),
+  meetingPlace: document.getElementById("meetingPlace"),
+  primeCompany: document.getElementById("primeCompany"),
+  startTime: document.getElementById("startTime"),
+  endTime: document.getElementById("endTime"),
+  otherNote: document.getElementById("otherNote"),
+  workerSections: document.getElementById("workerSections"),
+  clearButton: document.getElementById("clearButton"),
+  summaryButton: document.getElementById("summaryButton"),
+  excelButton: document.getElementById("excelButton"),
+  summaryArea: document.getElementById("summaryArea")
+};
 
+// ==============================
+// 日付関連
+// ==============================
 function setTodayDate() {
   const today = new Date();
   const yyyy = today.getFullYear();
   const mm = String(today.getMonth() + 1).padStart(2, "0");
   const dd = String(today.getDate()).padStart(2, "0");
-  workDate.value = `${yyyy}-${mm}-${dd}`;
-}
-
-function formatDateWithWeekday(dateString) {
-  if (!dateString) return "日付を選択してください";
-
-  const date = new Date(dateString);
-  if (isNaN(date.getTime())) return "日付を選択してください";
-
-  const weekdays = ["日", "月", "火", "水", "木", "金", "土"];
-  const y = date.getFullYear();
-  const m = date.getMonth() + 1;
-  const d = date.getDate();
-  const w = weekdays[date.getDay()];
-
-  return `${y}/${m}/${d}（${w}）`;
+  els.workDate.value = `${yyyy}-${mm}-${dd}`;
+  updateDatePreview();
 }
 
 function formatDateSlash(dateString) {
   if (!dateString) return "";
-  const datePart = dateString.split('（')[0]; // 曜日部分を除去
-  const date = new Date(datePart);
-  if (isNaN(date.getTime())) return "";
+  const date = new Date(dateString);
+  if (Number.isNaN(date.getTime())) return "";
   const y = date.getFullYear();
   const m = date.getMonth() + 1;
   const d = date.getDate();
@@ -68,15 +78,28 @@ function formatDateSlash(dateString) {
 
 function getWeekdayShort(dateString) {
   if (!dateString) return "";
-  const datePart = dateString.split('（')[0]; // 曜日部分を除去
-  const date = new Date(datePart);
-  if (isNaN(date.getTime())) return "";
+  const date = new Date(dateString);
+  if (Number.isNaN(date.getTime())) return "";
   const weekdays = ["日", "月", "火", "水", "木", "金", "土"];
   return weekdays[date.getDay()];
 }
 
+function formatDateWithWeekday(dateString) {
+  const dateSlash = formatDateSlash(dateString);
+  const weekday = getWeekdayShort(dateString);
+  if (!dateSlash || !weekday) return "日付を選択してください";
+  return `${dateSlash}（${weekday}）`;
+}
+
+function updateDatePreview() {
+  els.datePreview.textContent = formatDateWithWeekday(els.workDate.value);
+}
+
+// ==============================
+// 作業員ボタン生成
+// ==============================
 function createWorkerSections() {
-  workerSections.innerHTML = "";
+  els.workerSections.innerHTML = "";
 
   categories.forEach((category) => {
     const block = document.createElement("div");
@@ -106,106 +129,134 @@ function createWorkerSections() {
 
     block.appendChild(title);
     block.appendChild(grid);
-    workerSections.appendChild(block);
+    els.workerSections.appendChild(block);
   });
 }
 
-function toggleWorker(categoryKey, name, button) {
-  const targetSet = selectedWorkers[categoryKey];
+function toggleWorker(categoryKey, workerName, buttonEl) {
+  const set = selectedWorkers[categoryKey];
 
-  if (targetSet.has(name)) {
-    targetSet.delete(name);
-    button.classList.remove("active");
+  if (set.has(workerName)) {
+    set.delete(workerName);
+    buttonEl.classList.remove("active");
   } else {
-    targetSet.add(name);
-    button.classList.add("active");
+    set.add(workerName);
+    buttonEl.classList.add("active");
   }
 }
 
-function getInputValue(id) {
-  return document.getElementById(id).value.trim();
+// ==============================
+// 入力値取得
+// ==============================
+function getInputValue(el) {
+  return el.value.trim();
 }
 
-function formatWorkerList(setObject) {
-  const list = Array.from(setObject);
+function getFormData() {
+  return {
+    workDate: getInputValue(els.workDate),
+    workDateSlash: formatDateSlash(getInputValue(els.workDate)),
+    weekday: getWeekdayShort(getInputValue(els.workDate)),
+    workDateText: formatDateWithWeekday(getInputValue(els.workDate)),
+    destinationCompany: getInputValue(els.destinationCompany),
+    siteName: getInputValue(els.siteName),
+    meetingPlace: getInputValue(els.meetingPlace),
+    primeCompany: getInputValue(els.primeCompany),
+    startTime: getInputValue(els.startTime),
+    endTime: getInputValue(els.endTime),
+    otherNote: getInputValue(els.otherNote),
+    diving: Array.from(selectedWorkers.diving),
+    land: Array.from(selectedWorkers.land),
+    standby: Array.from(selectedWorkers.standby),
+    move: Array.from(selectedWorkers.move)
+  };
+}
+
+function getSelectedCount(data) {
+  return data.diving.length + data.land.length + data.standby.length + data.move.length;
+}
+
+// ==============================
+// 整理表示
+// ==============================
+function joinWorkerNames(list) {
   return list.length > 0 ? list.join("、") : "なし";
 }
 
-function buildSummaryText() {
-  const dateText = formatDateWithWeekday(workDate.value);
-  const destinationCompany = getInputValue("destinationCompany");
-  const siteName = getInputValue("siteName");
-  const meetingPlace = getInputValue("meetingPlace");
-  const primeCompany = getInputValue("primeCompany");
-  const startTime = getInputValue("startTime");
-  const endTime = getInputValue("endTime");
-  const otherNote = getInputValue("otherNote");
-
+function buildSummaryText(data) {
   return [
     "【基本情報】",
-    `日付：${dateText}`,
-    `行先会社名：${destinationCompany || "未入力"}`,
-    `現場名：${siteName || "未入力"}`,
-    `集合場所：${meetingPlace || "未入力"}`,
-    `元請会社名：${primeCompany || "未入力"}`,
-    `始業時間：${startTime || "未入力"}`,
-    `終業時間：${endTime || "未入力"}`,
+    `日付：${data.workDateText}`,
+    `行先会社名：${data.destinationCompany || "未入力"}`,
+    `現場名：${data.siteName || "未入力"}`,
+    `集合場所：${data.meetingPlace || "未入力"}`,
+    `元請会社名：${data.primeCompany || "未入力"}`,
+    `始業時間：${data.startTime || "未入力"}`,
+    `終業時間：${data.endTime || "未入力"}`,
     "",
     "【作業員分類】",
-    `潜水：${formatWorkerList(selectedWorkers.diving)}`,
-    `陸上：${formatWorkerList(selectedWorkers.land)}`,
-    `待機：${formatWorkerList(selectedWorkers.standby)}`,
-    `移動：${formatWorkerList(selectedWorkers.move)}`,
+    `潜水作業員：${joinWorkerNames(data.diving)}`,
+    `陸上作業員：${joinWorkerNames(data.land)}`,
+    `待機：${joinWorkerNames(data.standby)}`,
+    `移動：${joinWorkerNames(data.move)}`,
     "",
     "【その他】",
-    `${otherNote || "未入力"}`
+    data.otherNote || "未入力"
   ].join("\n");
 }
 
 function showSummary() {
-  summaryArea.textContent = buildSummaryText();
+  const data = getFormData();
+  els.summaryArea.textContent = buildSummaryText(data);
 }
 
+// ==============================
+// 全クリア
+// ==============================
 function clearAll() {
-  document.getElementById("destinationCompany").value = "";
-  document.getElementById("siteName").value = "";
-  document.getElementById("meetingPlace").value = "";
-  document.getElementById("primeCompany").value = "";
-  document.getElementById("startTime").value = "";
-  document.getElementById("endTime").value = "";
-  document.getElementById("otherNote").value = "";
+  els.destinationCompany.value = "";
+  els.siteName.value = "";
+  els.meetingPlace.value = "";
+  els.primeCompany.value = "";
+  els.startTime.value = "";
+  els.endTime.value = "";
+  els.otherNote.value = "";
 
-  categories.forEach((category) => {
-    selectedWorkers[category.key].clear();
+  Object.keys(selectedWorkers).forEach((key) => {
+    selectedWorkers[key].clear();
   });
 
   document.querySelectorAll(".worker-button").forEach((button) => {
     button.classList.remove("active");
   });
 
-  workDate.type = "date";
   setTodayDate();
-  summaryArea.textContent = "まだ表示されていません";
+  els.summaryArea.textContent = "まだ表示されていません";
 }
 
-function getFormData() {
-  return {
-    workDate: getInputValue("workDate"),
-    workDateText: formatDateWithWeekday(getInputValue("workDate")),
-    workDateSlash: formatDateSlash(getInputValue("workDate")),
-    weekday: getWeekdayShort(getInputValue("workDate")),
-    destinationCompany: getInputValue("destinationCompany"),
-    siteName: getInputValue("siteName"),
-    meetingPlace: getInputValue("meetingPlace"),
-    primeCompany: getInputValue("primeCompany"),
-    startTime: getInputValue("startTime"),
-    endTime: getInputValue("endTime"),
-    otherNote: getInputValue("otherNote"),
-    diving: Array.from(selectedWorkers.diving),
-    land: Array.from(selectedWorkers.land),
-    standby: Array.from(selectedWorkers.standby),
-    move: Array.from(selectedWorkers.move)
-  };
+// ==============================
+// Excel出力用
+// ※ index.html に SheetJS 読み込みが必要
+// ==============================
+function buildReportSheetData(data) {
+  return [
+    ["作業日報"],
+    [""],
+    ["日付", data.workDateText],
+    ["行先会社名", data.destinationCompany || ""],
+    ["現場名", data.siteName || ""],
+    ["集合場所", data.meetingPlace || ""],
+    ["元請会社名", data.primeCompany || ""],
+    ["始業時間", data.startTime || ""],
+    ["終業時間", data.endTime || ""],
+    [""],
+    ["潜水作業員", joinWorkerNames(data.diving)],
+    ["陸上作業員", joinWorkerNames(data.land)],
+    ["待機", joinWorkerNames(data.standby)],
+    ["移動", joinWorkerNames(data.move)],
+    [""],
+    ["その他", data.otherNote || ""]
+  ];
 }
 
 function buildDatabaseRows(data) {
@@ -221,7 +272,7 @@ function buildDatabaseRows(data) {
         "曜日": data.weekday,
         "番号": number,
         "作業員名": workerName,
-        "種別": category.label,
+        "種別": category.shortLabel,
         "始業時間": data.startTime || "",
         "終業時間": data.endTime || "",
         "残業": "",
@@ -239,27 +290,6 @@ function buildDatabaseRows(data) {
   return rows;
 }
 
-function buildReportSheetData(data) {
-  return [
-    ["作業日報"],
-    [""],
-    ["日付", data.workDateText],
-    ["行先会社名", data.destinationCompany || ""],
-    ["現場名", data.siteName || ""],
-    ["集合場所", data.meetingPlace || ""],
-    ["元請会社名", data.primeCompany || ""],
-    ["始業時間", data.startTime || ""],
-    ["終業時間", data.endTime || ""],
-    [""],
-    ["潜水", data.diving.length ? data.diving.join("、") : "なし"],
-    ["陸上", data.land.length ? data.land.join("、") : "なし"],
-    ["待機", data.standby.length ? data.standby.join("、") : "なし"],
-    ["移動", data.move.length ? data.move.join("、") : "なし"],
-    [""],
-    ["その他", data.otherNote || ""]
-  ];
-}
-
 function sanitizeFileName(text) {
   return (text || "現場名未入力")
     .replace(/[\\/:*?"<>|]/g, "")
@@ -274,14 +304,13 @@ function exportExcel() {
     return;
   }
 
-  const selectedCount =
-    data.diving.length +
-    data.land.length +
-    data.standby.length +
-    data.move.length;
-
-  if (selectedCount === 0) {
+  if (getSelectedCount(data) === 0) {
     alert("作業員を1人以上選択してください。");
+    return;
+  }
+
+  if (typeof XLSX === "undefined") {
+    alert("Excel出力ライブラリが読み込まれていません。index.html を確認してください。");
     return;
   }
 
@@ -290,18 +319,15 @@ function exportExcel() {
   // 日報シート
   const reportData = buildReportSheetData(data);
   const reportSheet = XLSX.utils.aoa_to_sheet(reportData);
-
   reportSheet["!cols"] = [
     { wch: 16 },
-    { wch: 45 }
+    { wch: 42 }
   ];
-
   XLSX.utils.book_append_sheet(workbook, reportSheet, "日報");
 
   // データベース用シート
   const databaseRows = buildDatabaseRows(data);
   const databaseSheet = XLSX.utils.json_to_sheet(databaseRows);
-
   databaseSheet["!cols"] = [
     { wch: 12 }, // 日付
     { wch: 8 },  // 曜日
@@ -314,11 +340,10 @@ function exportExcel() {
     { wch: 18 }, // 行先会社名
     { wch: 18 }, // 集合場所
     { wch: 18 }, // 元請名
-    { wch: 22 }, // 現場名
+    { wch: 24 }, // 現場名
     { wch: 40 }, // 作業内容
     { wch: 16 }  // 使用器材
   ];
-
   XLSX.utils.book_append_sheet(workbook, databaseSheet, "データベース用");
 
   const fileDate = data.workDateSlash.replace(/\//g, "-");
@@ -326,15 +351,25 @@ function exportExcel() {
   const fileName = `${fileDate}_${fileSite}_作業日報.xlsx`;
 
   XLSX.writeFile(workbook, fileName);
-workDate.addEventListener("change", () => {
-  if (workDate.value) {
-    workDate.type = "text";
-    workDate.value = formatDateWithWeekday(workDate.value);
-  }
-});
-summaryButton.addEventListener("click", showSummary);
-clearButton.addEventListener("click", clearAll);
-excelButton.addEventListener("click", exportExcel);
+}
 
-createWorkerSections();
-setTodayDate();
+// ==============================
+// イベント登録
+// ==============================
+function bindEvents() {
+  els.workDate.addEventListener("change", updateDatePreview);
+  els.summaryButton.addEventListener("click", showSummary);
+  els.clearButton.addEventListener("click", clearAll);
+  els.excelButton.addEventListener("click", exportExcel);
+}
+
+// ==============================
+// 初期化
+// ==============================
+function init() {
+  createWorkerSections();
+  setTodayDate();
+  bindEvents();
+}
+
+init();
