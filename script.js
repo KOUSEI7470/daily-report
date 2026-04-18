@@ -26,7 +26,6 @@ const selectedWorkers = {
 };
 
 const workDate = document.getElementById("workDate");
-const datePreview = document.getElementById("datePreview");
 const workerSections = document.getElementById("workerSections");
 const summaryButton = document.getElementById("summaryButton");
 const clearButton = document.getElementById("clearButton");
@@ -35,11 +34,7 @@ const summaryArea = document.getElementById("summaryArea");
 
 function setTodayDate() {
   const today = new Date();
-  const yyyy = today.getFullYear();
-  const mm = String(today.getMonth() + 1).padStart(2, "0");
-  const dd = String(today.getDate()).padStart(2, "0");
-  workDate.value = `${yyyy}-${mm}-${dd}`;
-  updateDatePreview();
+  workDate.value = formatDateWithWeekday(today);
 }
 
 function formatDateWithWeekday(dateString) {
@@ -59,7 +54,8 @@ function formatDateWithWeekday(dateString) {
 
 function formatDateSlash(dateString) {
   if (!dateString) return "";
-  const date = new Date(dateString);
+  const datePart = dateString.split('（')[0]; // 曜日部分を除去
+  const date = new Date(datePart);
   if (isNaN(date.getTime())) return "";
   const y = date.getFullYear();
   const m = date.getMonth() + 1;
@@ -69,14 +65,11 @@ function formatDateSlash(dateString) {
 
 function getWeekdayShort(dateString) {
   if (!dateString) return "";
-  const date = new Date(dateString);
+  const datePart = dateString.split('（')[0]; // 曜日部分を除去
+  const date = new Date(datePart);
   if (isNaN(date.getTime())) return "";
   const weekdays = ["日", "月", "火", "水", "木", "金", "土"];
   return weekdays[date.getDay()];
-}
-
-function updateDatePreview() {
-  datePreview.textContent = formatDateWithWeekday(workDate.value);
 }
 
 function createWorkerSections() {
@@ -331,7 +324,6 @@ function exportExcel() {
   XLSX.writeFile(workbook, fileName);
 }
 
-workDate.addEventListener("change", updateDatePreview);
 summaryButton.addEventListener("click", showSummary);
 clearButton.addEventListener("click", clearAll);
 excelButton.addEventListener("click", exportExcel);

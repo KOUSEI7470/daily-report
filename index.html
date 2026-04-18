@@ -17,11 +17,10 @@
       <section class="card">
         <h2 class="section-title">基本情報</h2>
 
-        <div class="form-grid">
-          <div class="form-group">
-            <label for="workDate">日付（曜日）</label>
-            <input type="date" id="workDate" />
-            <div id="datePreview" class="sub-text">日付を選択してください</div>
+        <div class="form-grid custom-form-grid">
+          <div class="form-group full">
+            <label for="workDate">日付</label>
+            <input type="text" id="workDate" readonly />
           </div>
 
           <div class="form-group full">
@@ -29,17 +28,17 @@
             <input type="text" id="destinationCompany" placeholder="例：〇〇建設" />
           </div>
 
-          <div class="form-group full">
+          <div class="form-group full site-name-group">
             <label for="siteName">現場名</label>
             <input type="text" id="siteName" placeholder="例：〇〇港補修工事" />
           </div>
 
-          <div class="form-group">
+          <div class="form-group full">
             <label for="meetingPlace">集合場所</label>
             <input type="text" id="meetingPlace" placeholder="例：本社前" />
           </div>
 
-          <div class="form-group">
+          <div class="form-group full">
             <label for="primeCompany">元請会社名</label>
             <input type="text" id="primeCompany" placeholder="例：〇〇マリン" />
           </div>
