@@ -2,14 +2,39 @@
   box-sizing: border-box;
 }
 
-body {
-  margin: 0;
-  font-family: "Yu Gothic", sans-serif;
-  background: linear-gradient(160deg, #0a4a7a, #0f6aa8, #6bc1ea);
-  color: #fff;
+:root {
+  --bg1: #0a4a7a;
+  --bg2: #0f6aa8;
+  --bg3: #6bc1ea;
+
+  --card: rgba(255, 255, 255, 0.14);
+  --card-border: rgba(255, 255, 255, 0.18);
+
+  --input-bg: #eef7fc;
+  --input-border: #b8d6e7;
+
+  --text: #08324f;
+  --text-light: #eff9ff;
+
+  --shadow: 0 10px 24px rgba(0, 0, 0, 0.14);
+
+  --btn-off-bg1: #d9e2e8;
+  --btn-off-bg2: #c9d3da;
+  --btn-off-text: #3f4d58;
+
+  --btn-on-bg1: #1f88d1;
+  --btn-on-bg2: #0f68ad;
+  --btn-on-text: #ffffff;
 }
 
-/* ===== 全体 ===== */
+body {
+  margin: 0;
+  font-family: "Yu Gothic UI", "Yu Gothic", "Meiryo", sans-serif;
+  background: linear-gradient(160deg, var(--bg1), var(--bg2), var(--bg3));
+  min-height: 100vh;
+  color: var(--text-light);
+}
+
 .app {
   padding: 8px;
 }
@@ -19,7 +44,6 @@ body {
   margin: 0 auto;
 }
 
-/* ===== ヘッダー ===== */
 .app-header {
   text-align: center;
   margin-bottom: 8px;
@@ -27,133 +51,209 @@ body {
 
 .app-header h1 {
   margin: 0;
-  font-size: 1.3rem;
+  font-size: 1.35rem;
 }
 
 .app-header p {
+  margin: 2px 0 0;
   font-size: 0.8rem;
 }
 
-/* ===== カード ===== */
 .card {
-  background: rgba(255,255,255,0.15);
-  border-radius: 12px;
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: 14px;
+  backdrop-filter: blur(8px);
+  box-shadow: var(--shadow);
   padding: 10px;
   margin-bottom: 8px;
 }
 
-/* ===== 見出し ===== */
 .section-title {
-  font-size: 0.9rem;
-  margin-bottom: 6px;
+  font-size: 0.95rem;
+  margin: 0 0 8px;
 }
 
-/* ===== フォーム ===== */
-.form-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 6px;
+.form-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .form-group {
   display: flex;
   flex-direction: column;
+  min-width: 0;
 }
 
-.form-group.small {
-  grid-column: span 1;
-}
-
-.form-group.full {
-  grid-column: span 3;
-}
-
-.empty-box {
-  visibility: hidden;
-}
-
-/* ===== ラベル ===== */
 label {
-  font-size: 0.75rem;
-  margin-bottom: 2px;
+  font-size: 0.76rem;
+  margin-bottom: 3px;
+  font-weight: 700;
 }
 
-/* ===== 入力 ===== */
 input,
 textarea {
   width: 100%;
-  padding: 6px;
+  min-width: 0;
+  padding: 7px 8px;
   font-size: 13px;
-  border-radius: 6px;
-  border: none;
+  border-radius: 8px;
+  border: 1px solid var(--input-border);
+  background: var(--input-bg);
+  color: var(--text);
 }
 
-/* 現場名は大きく */
+textarea {
+  min-height: 72px;
+  resize: vertical;
+}
+
 #siteName {
   font-size: 14px;
 }
 
-/* ===== 日付（ここ重要） ===== */
+/* 日付は小さく、曜日は下に表示 */
 .date-row {
   display: flex;
-  flex-direction: column; /* ←これで重なり防止 */
+  flex-direction: column;
+  align-items: flex-start;
   gap: 2px;
 }
 
 #workDate {
-  max-width: 150px;
+  width: 150px;
+  max-width: 100%;
   font-size: 12px;
+  padding: 5px 6px;
 }
 
 .date-inline {
-  font-size: 0.75rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  line-height: 1.2;
+  white-space: nowrap;
 }
 
-/* 曜日色 */
-.sat { color: #4fc3ff; }
-.sun { color: #ff6b6b; }
+.weekday {
+  color: #ffffff;
+}
 
-/* ===== 作業員 ===== */
+.sat {
+  color: #4fc3ff;
+}
+
+.sun {
+  color: #ff6b6b;
+}
+
+/* 元請・始業・終業は1/3幅 */
+.narrow-group input {
+  width: 33.3333%;
+  min-width: 120px;
+  max-width: 220px;
+}
+
+/* 作業員 */
+.worker-sections {
+  display: grid;
+  gap: 6px;
+}
+
+.worker-block {
+  margin-bottom: 4px;
+}
+
+.worker-title {
+  font-size: 0.85rem;
+  margin: 0 0 4px;
+}
+
 .worker-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 6px;
 }
 
 .worker-button {
   border: none;
-  border-radius: 8px;
-  padding: 8px;
-  font-size: 0.7rem;
-  background: #ddd;
+  border-radius: 10px;
+  padding: 8px 4px;
+  min-height: 42px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1.2;
+  background: linear-gradient(180deg, var(--btn-off-bg1), var(--btn-off-bg2));
+  color: var(--btn-off-text);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.6),
+    0 2px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.15s;
+  min-width: 0;
+}
+
+.worker-button:active {
+  transform: scale(0.95);
 }
 
 .worker-button.active {
-  background: #1f88d1;
-  color: #fff;
+  background: linear-gradient(180deg, var(--btn-on-bg1), var(--btn-on-bg2));
+  color: #ffffff;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
 }
 
-/* ===== ボタン ===== */
+/* 操作ボタン */
 .action-row {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
   gap: 6px;
 }
 
-button {
+.main-button {
   padding: 10px;
+  border-radius: 10px;
   border: none;
-  border-radius: 8px;
-  background: #0f6eb7;
-  color: white;
   font-size: 0.85rem;
+  font-weight: 700;
+  background: #0f6eb7;
+  color: #ffffff;
 }
 
-/* ===== 表示 ===== */
-#summaryArea {
+.secondary-button {
+  background: #7d96a8;
+}
+
+.excel-button {
+  background: #127a52;
+}
+
+/* 表示欄 */
+.summary-area {
   background: #eef8ff;
-  color: #08324f;
+  color: var(--text);
   padding: 8px;
   border-radius: 8px;
   font-size: 0.8rem;
+  min-height: 60px;
+  white-space: pre-wrap;
+}
+
+/* スマホ */
+@media (max-width: 600px) {
+  .worker-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .action-row {
+    grid-template-columns: 1fr;
+  }
+
+  .main-button {
+    width: 100%;
+  }
+
+  .narrow-group input {
+    width: 33.3333%;
+    min-width: 110px;
+  }
 }

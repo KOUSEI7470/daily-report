@@ -6,103 +6,91 @@
   <title>作業日報入力</title>
   <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-<div class="app">
+  <div class="app">
 
-  <header class="app-header">
-    <h1>作業日報</h1>
-    <p>スマホ入力用</p>
-  </header>
+    <header class="app-header">
+      <h1>作業日報</h1>
+      <p>スマホ入力用</p>
+    </header>
 
-  <main class="container">
+    <main class="container">
 
-    <section class="card">
-      <h2 class="section-title">基本情報</h2>
+      <section class="card">
+        <h2 class="section-title">基本情報</h2>
 
-      <div class="form-grid">
+        <div class="form-stack">
 
-        <!-- 1行目 -->
-        <div class="form-group small">
-          <label for="workDate">日付</label>
-          <div class="date-row">
-            <input type="date" id="workDate">
-            <div id="datePreview" class="date-inline"></div>
+          <div class="form-group">
+            <label for="workDate">日付</label>
+            <div class="date-row">
+              <input type="date" id="workDate">
+              <div id="datePreview" class="date-inline"></div>
+            </div>
           </div>
+
+          <div class="form-group">
+            <label for="destinationCompany">行先会社名</label>
+            <input type="text" id="destinationCompany" placeholder="例：〇〇建設">
+          </div>
+
+          <div class="form-group">
+            <label for="meetingPlace">集合場所</label>
+            <input type="text" id="meetingPlace" placeholder="例：本社前">
+          </div>
+
+          <div class="form-group">
+            <label for="siteName">現場名</label>
+            <input type="text" id="siteName" placeholder="例：〇〇港補修工事">
+          </div>
+
+          <div class="form-group narrow-group">
+            <label for="primeCompany">元請会社名</label>
+            <input type="text" id="primeCompany" placeholder="例：〇〇マリン">
+          </div>
+
+          <div class="form-group narrow-group">
+            <label for="startTime">始業時間</label>
+            <input type="time" id="startTime">
+          </div>
+
+          <div class="form-group narrow-group">
+            <label for="endTime">終業時間</label>
+            <input type="time" id="endTime">
+          </div>
+
+          <div class="form-group">
+            <label for="otherNote">その他</label>
+            <textarea id="otherNote" rows="4" placeholder="連絡事項、作業内容、注意点などを入力"></textarea>
+          </div>
+
         </div>
+      </section>
 
-        <div class="form-group small">
-          <label for="destinationCompany">行先会社名</label>
-          <input type="text" id="destinationCompany">
+      <section class="card">
+        <h2 class="section-title">作業員選択</h2>
+        <div id="workerSections" class="worker-sections"></div>
+      </section>
+
+      <section class="card">
+        <div class="action-row">
+          <button id="clearButton" class="main-button secondary-button" type="button">全てクリア</button>
+          <button id="summaryButton" class="main-button" type="button">入力内容を整理表示</button>
+          <button id="excelButton" class="main-button excel-button" type="button">Excel出力</button>
         </div>
+      </section>
 
-        <div class="form-group small">
-          <label for="meetingPlace">集合場所</label>
-          <input type="text" id="meetingPlace">
-        </div>
+      <section class="card">
+        <h2 class="section-title">表示</h2>
+        <div id="summaryArea" class="summary-area">ここに表示されます</div>
+      </section>
 
-        <!-- 2行目 -->
-        <div class="form-group full">
-          <label for="siteName">現場名</label>
-          <input type="text" id="siteName">
-        </div>
+    </main>
 
-        <!-- 3行目 -->
-        <div class="form-group small">
-          <label for="primeCompany">元請会社名</label>
-          <input type="text" id="primeCompany">
-        </div>
+  </div>
 
-        <div class="form-group small empty-box"></div>
-        <div class="form-group small empty-box"></div>
-
-        <!-- 4行目 -->
-        <div class="form-group small">
-          <label for="startTime">始業時間</label>
-          <input type="time" id="startTime">
-        </div>
-
-        <div class="form-group small">
-          <label for="endTime">終業時間</label>
-          <input type="time" id="endTime">
-        </div>
-
-        <div class="form-group small empty-box"></div>
-
-        <!-- その他 -->
-        <div class="form-group full">
-          <label for="otherNote">その他</label>
-          <textarea id="otherNote"></textarea>
-        </div>
-
-      </div>
-    </section>
-
-    <section class="card">
-      <h2 class="section-title">作業員選択</h2>
-      <div id="workerSections"></div>
-    </section>
-
-    <section class="card">
-      <div class="action-row">
-        <button id="clearButton">クリア</button>
-        <button id="summaryButton">整理表示</button>
-        <button id="excelButton">Excel出力</button>
-      </div>
-    </section>
-
-    <section class="card">
-      <h2 class="section-title">表示</h2>
-      <div id="summaryArea">ここに表示されます</div>
-    </section>
-
-  </main>
-
-</div>
-
-<script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
-<script src="script.js"></script>
-
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
