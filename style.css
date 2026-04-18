@@ -27,7 +27,6 @@
   --btn-on-text: #ffffff;
 }
 
-/* ===== 背景 ===== */
 body {
   margin: 0;
   font-family: "Yu Gothic UI", "Yu Gothic", "Meiryo", sans-serif;
@@ -36,7 +35,6 @@ body {
   color: var(--text-light);
 }
 
-/* ===== 全体 ===== */
 .app {
   padding: 8px;
 }
@@ -61,7 +59,6 @@ body {
   font-size: 0.8rem;
 }
 
-/* ===== カード ===== */
 .card {
   background: var(--card);
   border: 1px solid var(--card-border);
@@ -77,20 +74,28 @@ body {
   margin: 0 0 6px;
 }
 
-/* ===== 入力 ===== */
 .form-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 6px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px 8px;
 }
 
 .form-group {
   display: flex;
   flex-direction: column;
+  min-width: 0;
+}
+
+.form-group.small {
+  grid-column: span 1;
 }
 
 .form-group.full {
-  grid-column: 1 / -1;
+  grid-column: span 3;
+}
+
+.empty-box {
+  visibility: hidden;
 }
 
 label {
@@ -102,28 +107,16 @@ label {
 input,
 textarea {
   width: 100%;
-  padding: 8px;
-  font-size: 14px;
+  padding: 7px 8px;
+  font-size: 13px;
   border-radius: 8px;
   border: 1px solid var(--input-border);
   background: var(--input-bg);
   color: var(--text);
 }
 
-/* 指定ボックスだけ少し小さく */
-#workDate,
-#destinationCompany,
-#meetingPlace,
-#startTime,
-#endTime {
-  padding: 5px 8px;
-  font-size: 12px;
-  height: 32px;
-}
-
-/* 現場名は広め */
-#siteName {
-  min-height: 40px;
+#siteName,
+#primeCompany {
   font-size: 14px;
 }
 
@@ -138,19 +131,18 @@ textarea {
   color: #eaf7ff;
 }
 
-/* ===== 日付＋曜日表示 ===== */
 .date-row {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
 }
 
 .date-row input {
-  flex: 0 1 auto;
+  min-width: 0;
 }
 
 .date-inline {
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   font-weight: 700;
   white-space: nowrap;
 }
@@ -167,7 +159,6 @@ textarea {
   color: #ff6b6b;
 }
 
-/* ===== 作業員ブロック ===== */
 .worker-sections {
   display: grid;
   gap: 6px;
@@ -182,14 +173,12 @@ textarea {
   margin: 0 0 4px;
 }
 
-/* PC → 4列 */
 .worker-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 6px;
 }
 
-/* 作業員ボタン */
 .worker-button {
   border: none;
   border-radius: 10px;
@@ -216,7 +205,6 @@ textarea {
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
 }
 
-/* ===== ボタン行 ===== */
 .action-row {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
@@ -241,7 +229,6 @@ textarea {
   background: #127a52;
 }
 
-/* ===== 出力欄 ===== */
 .summary-area {
   background: #eef8ff;
   color: var(--text);
@@ -252,11 +239,20 @@ textarea {
   white-space: pre-wrap;
 }
 
-/* ===== スマホ調整 ===== */
 @media (max-width: 600px) {
   .form-grid {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(3, 1fr);
     gap: 6px;
+  }
+
+  .date-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 3px;
+  }
+
+  .date-inline {
+    font-size: 0.82rem;
   }
 
   .worker-grid {
@@ -269,9 +265,5 @@ textarea {
 
   .main-button {
     width: 100%;
-  }
-
-  .date-inline {
-    font-size: 0.9rem;
   }
 }
