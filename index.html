@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>作業日報入力</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
 <div class="app">
@@ -26,45 +27,45 @@
         <div class="form-group small">
           <label for="workDate">日付</label>
           <div class="date-row">
-            <input type="date" id="workDate" />
+            <input type="date" id="workDate">
             <div id="datePreview" class="date-inline"></div>
           </div>
         </div>
 
         <div class="form-group small">
           <label for="destinationCompany">行先会社名</label>
-          <input type="text" id="destinationCompany" />
+          <input type="text" id="destinationCompany">
         </div>
 
         <div class="form-group small">
           <label for="meetingPlace">集合場所</label>
-          <input type="text" id="meetingPlace" />
+          <input type="text" id="meetingPlace">
         </div>
 
         <!-- 2行目 -->
         <div class="form-group full">
           <label for="siteName">現場名</label>
-          <input type="text" id="siteName" />
+          <input type="text" id="siteName">
         </div>
 
-        <!-- 3行目 元請 -->
+        <!-- 3行目 -->
         <div class="form-group small">
           <label for="primeCompany">元請会社名</label>
-          <input type="text" id="primeCompany" />
+          <input type="text" id="primeCompany">
         </div>
 
         <div class="form-group small empty-box"></div>
         <div class="form-group small empty-box"></div>
 
-        <!-- 4行目 時間 -->
+        <!-- 4行目 -->
         <div class="form-group small">
           <label for="startTime">始業時間</label>
-          <input type="time" id="startTime" />
+          <input type="time" id="startTime">
         </div>
 
         <div class="form-group small">
           <label for="endTime">終業時間</label>
-          <input type="time" id="endTime" />
+          <input type="time" id="endTime">
         </div>
 
         <div class="form-group small empty-box"></div>
@@ -97,6 +98,7 @@
     </section>
 
   </main>
+
 </div>
 
 <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
