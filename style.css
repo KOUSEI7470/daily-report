@@ -113,6 +113,13 @@ textarea {
   font-size: 14px;
 }
 
+#destinationCompany,
+#meetingPlace {
+  width: 85%;
+  max-width: 320px;
+  min-width: 180px;
+}
+
 /* 日付は小さく、曜日は下に表示 */
 .date-row {
   display: flex;
