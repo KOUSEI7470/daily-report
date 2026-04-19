@@ -7,78 +7,116 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <main class="container">
+  <main>
     <h1>作業日報</h1>
 
-    <form id="daily-report-form" class="report-form">
-      <section class="card">
-        <h2>基本情報</h2>
+    <form id="daily-report-form">
+      <div>
+        <label for="report-date">日付</label>
+        <input type="date" id="report-date" name="report-date" required />
+      </div>
 
-        <div class="field-grid">
-          <div class="field">
-            <label for="report-date">日付</label>
-            <input type="date" id="report-date" required />
-          </div>
+      <div>
+        <label for="destination-company">行先会社名</label>
+        <input type="text" id="destination-company" name="destination-company" />
+      </div>
 
-          <div class="field">
-            <label for="destination-company">行先会社名</label>
-            <input type="text" id="destination-company" placeholder="例：〇〇株式会社" />
-          </div>
+      <div>
+        <label for="site-name">現場名</label>
+        <input type="text" id="site-name" name="site-name" required />
+      </div>
 
-          <div class="field">
-            <label for="site-name">現場名</label>
-            <input type="text" id="site-name" placeholder="例：〇〇港北工区" required />
-          </div>
+      <div>
+        <label for="meeting-place">集合場所</label>
+        <input type="text" id="meeting-place" name="meeting-place" />
+      </div>
 
-          <div class="field">
-            <label for="meeting-place">集合場所</label>
-            <input type="text" id="meeting-place" placeholder="例：〇〇港" />
-          </div>
+      <div>
+        <label for="prime-contractor">元請会社名</label>
+        <input type="text" id="prime-contractor" name="prime-contractor" />
+      </div>
 
-          <div class="field">
-            <label for="prime-contractor">元請会社名</label>
-            <input type="text" id="prime-contractor" placeholder="例：〇〇建設" />
-          </div>
+      <div>
+        <label for="start-time">始業時間</label>
+        <input type="time" id="start-time" name="start-time" />
+      </div>
 
-          <div class="field">
-            <label for="start-time">始業時間</label>
-            <input type="time" id="start-time" />
-          </div>
+      <div>
+        <label for="end-time">終業時間</label>
+        <input type="time" id="end-time" name="end-time" />
+      </div>
 
-          <div class="field">
-            <label for="end-time">終業時間</label>
-            <input type="time" id="end-time" />
-          </div>
-        </div>
+      <div>
+        <label for="remarks">その他</label>
+        <textarea id="remarks" name="remarks" rows="4"></textarea>
+      </div>
 
-        <div class="field">
-          <label for="remarks">その他</label>
-          <textarea id="remarks" rows="4" placeholder="連絡事項など"></textarea>
-        </div>
-      </section>
-
-      <section class="card">
+      <section>
         <h2>潜水作業員</h2>
-        <div id="diver-list" class="worker-grid"></div>
+        <div>
+          <label><input type="checkbox" name="diver" value="潜水1"> 潜水1</label>
+          <label><input type="checkbox" name="diver" value="潜水2"> 潜水2</label>
+          <label><input type="checkbox" name="diver" value="潜水3"> 潜水3</label>
+          <label><input type="checkbox" name="diver" value="潜水4"> 潜水4</label>
+          <label><input type="checkbox" name="diver" value="潜水5"> 潜水5</label>
+          <label><input type="checkbox" name="diver" value="潜水6"> 潜水6</label>
+          <label><input type="checkbox" name="diver" value="潜水7"> 潜水7</label>
+          <label><input type="checkbox" name="diver" value="潜水8"> 潜水8</label>
+          <label><input type="checkbox" name="diver" value="潜水9"> 潜水9</label>
+          <label><input type="checkbox" name="diver" value="潜水10"> 潜水10</label>
+        </div>
       </section>
 
-      <section class="card">
+      <section>
         <h2>陸上作業員</h2>
-        <div id="land-list" class="worker-grid"></div>
+        <div>
+          <label><input type="checkbox" name="land" value="陸上1"> 陸上1</label>
+          <label><input type="checkbox" name="land" value="陸上2"> 陸上2</label>
+          <label><input type="checkbox" name="land" value="陸上3"> 陸上3</label>
+          <label><input type="checkbox" name="land" value="陸上4"> 陸上4</label>
+          <label><input type="checkbox" name="land" value="陸上5"> 陸上5</label>
+          <label><input type="checkbox" name="land" value="陸上6"> 陸上6</label>
+          <label><input type="checkbox" name="land" value="陸上7"> 陸上7</label>
+          <label><input type="checkbox" name="land" value="陸上8"> 陸上8</label>
+          <label><input type="checkbox" name="land" value="陸上9"> 陸上9</label>
+          <label><input type="checkbox" name="land" value="陸上10"> 陸上10</label>
+        </div>
       </section>
 
-      <section class="card">
+      <section>
         <h2>待機</h2>
-        <div id="standby-list" class="worker-grid"></div>
+        <div>
+          <label><input type="checkbox" name="standby" value="待機1"> 待機1</label>
+          <label><input type="checkbox" name="standby" value="待機2"> 待機2</label>
+          <label><input type="checkbox" name="standby" value="待機3"> 待機3</label>
+          <label><input type="checkbox" name="standby" value="待機4"> 待機4</label>
+          <label><input type="checkbox" name="standby" value="待機5"> 待機5</label>
+          <label><input type="checkbox" name="standby" value="待機6"> 待機6</label>
+          <label><input type="checkbox" name="standby" value="待機7"> 待機7</label>
+          <label><input type="checkbox" name="standby" value="待機8"> 待機8</label>
+          <label><input type="checkbox" name="standby" value="待機9"> 待機9</label>
+          <label><input type="checkbox" name="standby" value="待機10"> 待機10</label>
+        </div>
       </section>
 
-      <section class="card">
+      <section>
         <h2>移動</h2>
-        <div id="moving-list" class="worker-grid"></div>
+        <div>
+          <label><input type="checkbox" name="moving" value="移動1"> 移動1</label>
+          <label><input type="checkbox" name="moving" value="移動2"> 移動2</label>
+          <label><input type="checkbox" name="moving" value="移動3"> 移動3</label>
+          <label><input type="checkbox" name="moving" value="移動4"> 移動4</label>
+          <label><input type="checkbox" name="moving" value="移動5"> 移動5</label>
+          <label><input type="checkbox" name="moving" value="移動6"> 移動6</label>
+          <label><input type="checkbox" name="moving" value="移動7"> 移動7</label>
+          <label><input type="checkbox" name="moving" value="移動8"> 移動8</label>
+          <label><input type="checkbox" name="moving" value="移動9"> 移動9</label>
+          <label><input type="checkbox" name="moving" value="移動10"> 移動10</label>
+        </div>
       </section>
 
-      <div class="action-area">
-        <button id="send-button" type="button" class="primary-button">送信</button>
+      <div>
+        <button id="send-button" type="button">送信</button>
       </div>
     </form>
   </main>
