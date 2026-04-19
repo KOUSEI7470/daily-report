@@ -286,7 +286,14 @@ textarea {
 
 @media (max-width: 600px) {
   .worker-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 4px;
+  }
+
+  .worker-button {
+    font-size: 0.68rem;
+    padding: 6px 3px;
+    min-height: 38px;
   }
 
   .action-row {
