@@ -57,7 +57,7 @@ const els = {
   workerSections: document.getElementById("workerSections"),
   clearButton: document.getElementById("clearButton"),
   summaryButton: document.getElementById("summaryButton"),
-  sendButton: document.getElementById("sendButton"),
+  excelButton: document.getElementById("excelButton"),
   summaryArea: document.getElementById("summaryArea")
 };
 
@@ -285,11 +285,11 @@ async function sendReport() {
     return;
   }
 
-  const originalText = els.sendButton.textContent;
+  const originalText = els.excelButton.textContent;
 
   try {
-    els.sendButton.disabled = true;
-    els.sendButton.textContent = "送信中...";
+    els.excelButton.disabled = true;
+    els.excelButton.textContent = "送信中...";
 
     const templateParams = {
       work_date: data.workDateText,
