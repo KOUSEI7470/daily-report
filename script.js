@@ -1,9 +1,9 @@
 // ==============================
-// EmailJS 設定
+// EmailJS 設定（config.js 参照）
 // ==============================
-const EMAILJS_PUBLIC_KEY = "ここにPublic Key";
-const EMAILJS_SERVICE_ID = "ここにService ID";
-const EMAILJS_TEMPLATE_ID = "ここにTemplate ID";
+const EMAILJS_PUBLIC_KEY = EMAILJS_CONFIG.publicKey;
+const EMAILJS_SERVICE_ID = EMAILJS_CONFIG.serviceId;
+const EMAILJS_TEMPLATE_ID = EMAILJS_CONFIG.templateId;
 
 // ==============================
 // 作業員名
@@ -190,32 +190,6 @@ function joinWorkerNames(list) {
   return list.length > 0 ? list.join("、") : "なし";
 }
 
-function buildSummaryHTML(data) {
-  return `
-    <div class="summary-section">
-      <h3>基本情報</h3>
-      <div class="summary-row"><span class="summary-label">日付</span><span>${data.workDateText}</span></div>
-      <div class="summary-row"><span class="summary-label">行先会社名</span><span>${data.destinationCompany || "未入力"}</span></div>
-      <div class="summary-row"><span class="summary-label">現場名</span><span>${data.siteName || "未入力"}</span></div>
-      <div class="summary-row"><span class="summary-label">集合場所</span><span>${data.meetingPlace || "未入力"}</span></div>
-      <div class="summary-row"><span class="summary-label">元請会社名</span><span>${data.primeCompany || "未入力"}</span></div>
-      <div class="summary-row"><span class="summary-label">始業時間</span><span>${data.startTime || "未入力"}</span></div>
-      <div class="summary-row"><span class="summary-label">終業時間</span><span>${data.endTime || "未入力"}</span></div>
-    </div>
-    <div class="summary-section">
-      <h3>作業員分類</h3>
-      <div class="summary-row"><span class="summary-label">潜水作業員</span><span>${joinWorkerNames(data.diving)}</span></div>
-      <div class="summary-row"><span class="summary-label">陸上作業員</span><span>${joinWorkerNames(data.land)}</span></div>
-      <div class="summary-row"><span class="summary-label">待機</span><span>${joinWorkerNames(data.standby)}</span></div>
-      <div class="summary-row"><span class="summary-label">移動</span><span>${joinWorkerNames(data.move)}</span></div>
-    </div>
-    <div class="summary-section">
-      <h3>その他</h3>
-      <div class="summary-row summary-note">${data.otherNote || "未入力"}</div>
-    </div>
-  `;
-}
-
 function buildSummaryText(data) {
   return [
     "【基本情報】",
@@ -236,6 +210,28 @@ function buildSummaryText(data) {
     "【その他】",
     data.otherNote || "未入力"
   ].join("\n");
+}
+
+function buildSummaryHTML(data) {
+  return `
+    <div><strong>【基本情報】</strong></div>
+    <div>日付：${data.workDateText}</div>
+    <div>行先会社名：${data.destinationCompany || "未入力"}</div>
+    <div>現場名：${data.siteName || "未入力"}</div>
+    <div>集合場所：${data.meetingPlace || "未入力"}</div>
+    <div>元請会社名：${data.primeCompany || "未入力"}</div>
+    <div>始業時間：${data.startTime || "未入力"}</div>
+    <div>終業時間：${data.endTime || "未入力"}</div>
+    <br>
+    <div><strong>【作業員分類】</strong></div>
+    <div>潜水作業員：${joinWorkerNames(data.diving)}</div>
+    <div>陸上作業員：${joinWorkerNames(data.land)}</div>
+    <div>待機：${joinWorkerNames(data.standby)}</div>
+    <div>移動：${joinWorkerNames(data.move)}</div>
+    <br>
+    <div><strong>【その他】</strong></div>
+    <div>${data.otherNote || "未入力"}</div>
+  `;
 }
 
 function showSummary() {
@@ -280,6 +276,26 @@ async function sendReport() {
     return;
   }
 
+  if (!data.destinationCompany) {
+    alert("行先会社名を入力してください。");
+    return;
+  }
+
+  if (!data.siteName) {
+    alert("現場名を入力してください。");
+    return;
+  }
+
+  if (!data.startTime) {
+    alert("始業時間を入力してください。");
+    return;
+  }
+
+  if (!data.endTime) {
+    alert("終業時間を入力してください。");
+    return;
+  }
+
   if (getSelectedCount(data) === 0) {
     alert("作業員を1人以上選択してください。");
     return;
@@ -318,7 +334,7 @@ async function sendReport() {
       templateParams
     );
 
-    els.summaryArea.textContent = `${buildSummaryText(data)}\n\n送信完了しました。`;
+    els.summaryArea.innerHTML = buildSummaryHTML(data) + "<br><br><strong>送信完了しました。</strong>";
     alert("送信が完了しました。");
   } catch (error) {
     console.error("送信エラー:", error);
@@ -350,7 +366,7 @@ function clearAll() {
   });
 
   setTodayDate();
-  els.summaryArea.textContent = "まだ表示されていません";
+  els.summaryArea.textContent = "ここに表示";
 }
 
 // ==============================
