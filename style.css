@@ -282,8 +282,6 @@ textarea {
 }
 
 /* スマホ */
-
-
 @media (max-width: 600px) {
   .worker-grid {
     grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -311,6 +309,8 @@ textarea {
     min-width: 110px;
   }
 }
+
+
 
 /* ← ここから追加 */
 .required {
