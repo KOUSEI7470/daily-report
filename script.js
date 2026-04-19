@@ -191,6 +191,27 @@ function joinWorkerNames(list) {
 }
 
 function buildSummaryText(data) {
+  function buildSummaryHTML(data) {
+  return `
+    <strong>【基本情報】</strong><br>
+    日付：${data.workDateText}<br>
+    行先会社名：${data.destinationCompany || "未入力"}<br>
+    現場名：${data.siteName || "未入力"}<br>
+    集合場所：${data.meetingPlace || "未入力"}<br>
+    元請会社名：${data.primeCompany || "未入力"}<br>
+    始業時間：${data.startTime || "未入力"}<br>
+    終業時間：${data.endTime || "未入力"}<br>
+    <br>
+    <strong>【作業員分類】</strong><br>
+    潜水作業員：${joinWorkerNames(data.diving)}<br>
+    陸上作業員：${joinWorkerNames(data.land)}<br>
+    待機：${joinWorkerNames(data.standby)}<br>
+    移動：${joinWorkerNames(data.move)}<br>
+    <br>
+    <strong>【その他】</strong><br>
+    ${data.otherNote || "未入力"}
+  `;
+}
   return [
     "【基本情報】",
     `日付：${data.workDateText}`,
@@ -214,7 +235,7 @@ function buildSummaryText(data) {
 
 function showSummary() {
   const data = getFormData();
-  els.summaryArea.textContent = buildSummaryText(data);
+  els.summaryArea.innerHTML = buildSummaryHTML(data);
 }
 
 // ==============================

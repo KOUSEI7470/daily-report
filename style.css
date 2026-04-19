@@ -256,8 +256,8 @@ textarea {
   }
 
   .action-row {
-    grid-template-columns: 1fr;
-  }
+  grid-template-columns: 1fr 1fr 1fr;
+}
 
   .main-button {
     width: 100%;
