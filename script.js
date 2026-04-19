@@ -1,4 +1,11 @@
 // ==============================
+// EmailJS 設定
+// ==============================
+const EMAILJS_PUBLIC_KEY = "ここにPublic Key";
+const EMAILJS_SERVICE_ID = "ここにService ID";
+const EMAILJS_TEMPLATE_ID = "ここにTemplate ID";
+
+// ==============================
 // 作業員名
 // ==============================
 const workerNames = [
@@ -50,7 +57,7 @@ const els = {
   workerSections: document.getElementById("workerSections"),
   clearButton: document.getElementById("clearButton"),
   summaryButton: document.getElementById("summaryButton"),
-  excelButton: document.getElementById("excelButton"),
+  sendButton: document.getElementById("sendButton"),
   summaryArea: document.getElementById("summaryArea")
 };
 
@@ -211,6 +218,92 @@ function showSummary() {
 }
 
 // ==============================
+// メール送信用テキスト
+// ==============================
+function buildMailBody(data) {
+  return [
+    "【作業日報】",
+    "",
+    `日付：${data.workDateText}`,
+    `行先会社名：${data.destinationCompany || "未入力"}`,
+    `現場名：${data.siteName || "未入力"}`,
+    `集合場所：${data.meetingPlace || "未入力"}`,
+    `元請会社名：${data.primeCompany || "未入力"}`,
+    `始業時間：${data.startTime || "未入力"}`,
+    `終業時間：${data.endTime || "未入力"}`,
+    "",
+    "【作業員分類】",
+    `潜水作業員：${joinWorkerNames(data.diving)}`,
+    `陸上作業員：${joinWorkerNames(data.land)}`,
+    `待機：${joinWorkerNames(data.standby)}`,
+    `移動：${joinWorkerNames(data.move)}`,
+    "",
+    "【その他】",
+    data.otherNote || "未入力"
+  ].join("\n");
+}
+
+// ==============================
+// 送信
+// ==============================
+async function sendReport() {
+  const data = getFormData();
+
+  if (!data.workDate) {
+    alert("日付を入力してください。");
+    return;
+  }
+
+  if (getSelectedCount(data) === 0) {
+    alert("作業員を1人以上選択してください。");
+    return;
+  }
+
+  if (typeof emailjs === "undefined") {
+    alert("EmailJSが読み込まれていません。index.html を確認してください。");
+    return;
+  }
+
+  const originalText = els.sendButton.textContent;
+
+  try {
+    els.sendButton.disabled = true;
+    els.sendButton.textContent = "送信中...";
+
+    const templateParams = {
+      work_date: data.workDateText,
+      destination_company: data.destinationCompany || "未入力",
+      site_name: data.siteName || "未入力",
+      meeting_place: data.meetingPlace || "未入力",
+      prime_company: data.primeCompany || "未入力",
+      start_time: data.startTime || "未入力",
+      end_time: data.endTime || "未入力",
+      diving_workers: joinWorkerNames(data.diving),
+      land_workers: joinWorkerNames(data.land),
+      standby_workers: joinWorkerNames(data.standby),
+      move_workers: joinWorkerNames(data.move),
+      other_note: data.otherNote || "未入力",
+      message: buildMailBody(data)
+    };
+
+    await emailjs.send(
+      EMAILJS_SERVICE_ID,
+      EMAILJS_TEMPLATE_ID,
+      templateParams
+    );
+
+    els.summaryArea.textContent = `${buildSummaryText(data)}\n\n送信完了しました。`;
+    alert("送信が完了しました。");
+  } catch (error) {
+    console.error("送信エラー:", error);
+    alert("送信に失敗しました。EmailJSの設定を確認してください。");
+  } finally {
+    els.sendButton.disabled = false;
+    els.sendButton.textContent = originalText;
+  }
+}
+
+// ==============================
 // 全クリア
 // ==============================
 function clearAll() {
@@ -235,138 +328,23 @@ function clearAll() {
 }
 
 // ==============================
-// Excel出力用
-// ※ index.html に SheetJS 読み込みが必要
-// ==============================
-function buildReportSheetData(data) {
-  return [
-    ["作業日報"],
-    [""],
-    ["日付", data.workDateText],
-    ["行先会社名", data.destinationCompany || ""],
-    ["現場名", data.siteName || ""],
-    ["集合場所", data.meetingPlace || ""],
-    ["元請会社名", data.primeCompany || ""],
-    ["始業時間", data.startTime || ""],
-    ["終業時間", data.endTime || ""],
-    [""],
-    ["潜水作業員", joinWorkerNames(data.diving)],
-    ["陸上作業員", joinWorkerNames(data.land)],
-    ["待機", joinWorkerNames(data.standby)],
-    ["移動", joinWorkerNames(data.move)],
-    [""],
-    ["その他", data.otherNote || ""]
-  ];
-}
-
-function buildDatabaseRows(data) {
-  const rows = [];
-  let number = 1;
-
-  categories.forEach((category) => {
-    const workers = data[category.key];
-
-    workers.forEach((workerName) => {
-      rows.push({
-        "日付": data.workDateSlash,
-        "曜日": data.weekday,
-        "番号": number,
-        "作業員名": workerName,
-        "種別": category.shortLabel,
-        "始業時間": data.startTime || "",
-        "終業時間": data.endTime || "",
-        "残業": "",
-        "行先会社名": data.destinationCompany || "",
-        "集合場所": data.meetingPlace || "",
-        "元請名": data.primeCompany || "",
-        "現場名": data.siteName || "",
-        "作業内容": data.otherNote || "",
-        "使用器材": ""
-      });
-      number += 1;
-    });
-  });
-
-  return rows;
-}
-
-function sanitizeFileName(text) {
-  return (text || "現場名未入力")
-    .replace(/[\\/:*?"<>|]/g, "")
-    .replace(/\s+/g, "_");
-}
-
-function exportExcel() {
-  const data = getFormData();
-
-  if (!data.workDate) {
-    alert("日付を入力してください。");
-    return;
-  }
-
-  if (getSelectedCount(data) === 0) {
-    alert("作業員を1人以上選択してください。");
-    return;
-  }
-
-  if (typeof XLSX === "undefined") {
-    alert("Excel出力ライブラリが読み込まれていません。index.html を確認してください。");
-    return;
-  }
-
-  const workbook = XLSX.utils.book_new();
-
-  // 日報シート
-  const reportData = buildReportSheetData(data);
-  const reportSheet = XLSX.utils.aoa_to_sheet(reportData);
-  reportSheet["!cols"] = [
-    { wch: 16 },
-    { wch: 42 }
-  ];
-  XLSX.utils.book_append_sheet(workbook, reportSheet, "日報");
-
-  // データベース用シート
-  const databaseRows = buildDatabaseRows(data);
-  const databaseSheet = XLSX.utils.json_to_sheet(databaseRows);
-  databaseSheet["!cols"] = [
-    { wch: 12 }, // 日付
-    { wch: 8 },  // 曜日
-    { wch: 8 },  // 番号
-    { wch: 14 }, // 作業員名
-    { wch: 10 }, // 種別
-    { wch: 10 }, // 始業時間
-    { wch: 10 }, // 終業時間
-    { wch: 8 },  // 残業
-    { wch: 18 }, // 行先会社名
-    { wch: 18 }, // 集合場所
-    { wch: 18 }, // 元請名
-    { wch: 24 }, // 現場名
-    { wch: 40 }, // 作業内容
-    { wch: 16 }  // 使用器材
-  ];
-  XLSX.utils.book_append_sheet(workbook, databaseSheet, "データベース用");
-
-  const fileDate = data.workDateSlash.replace(/\//g, "-");
-  const fileSite = sanitizeFileName(data.siteName);
-  const fileName = `${fileDate}_${fileSite}_作業日報.xlsx`;
-
-  XLSX.writeFile(workbook, fileName);
-}
-
-// ==============================
 // イベント登録
 // ==============================
 function bindEvents() {
   els.workDate.addEventListener("change", updateDatePreview);
   els.summaryButton.addEventListener("click", showSummary);
   els.clearButton.addEventListener("click", clearAll);
-  els.excelButton.addEventListener("click", exportExcel);
+  els.sendButton.addEventListener("click", sendReport);
 }
 
 // ==============================
 // 初期化
 // ==============================
 function init() {
+  emailjs.init({
+    publicKey: EMAILJS_PUBLIC_KEY
+  });
+
   createWorkerSections();
   setTodayDate();
   bindEvents();

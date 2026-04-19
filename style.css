@@ -230,8 +230,12 @@ textarea {
   background: #7d96a8;
 }
 
-.excel-button {
+.send-button {
   background: #127a52;
+}
+
+.main-button:disabled {
+  opacity: 0.7;
 }
 
 /* 表示欄 */
