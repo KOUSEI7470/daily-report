@@ -190,28 +190,33 @@ function joinWorkerNames(list) {
   return list.length > 0 ? list.join("、") : "なし";
 }
 
-function buildSummaryText(data) {
-  function buildSummaryHTML(data) {
+function buildSummaryHTML(data) {
   return `
-    <strong>【基本情報】</strong><br>
-    日付：${data.workDateText}<br>
-    行先会社名：${data.destinationCompany || "未入力"}<br>
-    現場名：${data.siteName || "未入力"}<br>
-    集合場所：${data.meetingPlace || "未入力"}<br>
-    元請会社名：${data.primeCompany || "未入力"}<br>
-    始業時間：${data.startTime || "未入力"}<br>
-    終業時間：${data.endTime || "未入力"}<br>
-    <br>
-    <strong>【作業員分類】</strong><br>
-    潜水作業員：${joinWorkerNames(data.diving)}<br>
-    陸上作業員：${joinWorkerNames(data.land)}<br>
-    待機：${joinWorkerNames(data.standby)}<br>
-    移動：${joinWorkerNames(data.move)}<br>
-    <br>
-    <strong>【その他】</strong><br>
-    ${data.otherNote || "未入力"}
+    <div class="summary-section">
+      <h3>基本情報</h3>
+      <div class="summary-row"><span class="summary-label">日付</span><span>${data.workDateText}</span></div>
+      <div class="summary-row"><span class="summary-label">行先会社名</span><span>${data.destinationCompany || "未入力"}</span></div>
+      <div class="summary-row"><span class="summary-label">現場名</span><span>${data.siteName || "未入力"}</span></div>
+      <div class="summary-row"><span class="summary-label">集合場所</span><span>${data.meetingPlace || "未入力"}</span></div>
+      <div class="summary-row"><span class="summary-label">元請会社名</span><span>${data.primeCompany || "未入力"}</span></div>
+      <div class="summary-row"><span class="summary-label">始業時間</span><span>${data.startTime || "未入力"}</span></div>
+      <div class="summary-row"><span class="summary-label">終業時間</span><span>${data.endTime || "未入力"}</span></div>
+    </div>
+    <div class="summary-section">
+      <h3>作業員分類</h3>
+      <div class="summary-row"><span class="summary-label">潜水作業員</span><span>${joinWorkerNames(data.diving)}</span></div>
+      <div class="summary-row"><span class="summary-label">陸上作業員</span><span>${joinWorkerNames(data.land)}</span></div>
+      <div class="summary-row"><span class="summary-label">待機</span><span>${joinWorkerNames(data.standby)}</span></div>
+      <div class="summary-row"><span class="summary-label">移動</span><span>${joinWorkerNames(data.move)}</span></div>
+    </div>
+    <div class="summary-section">
+      <h3>その他</h3>
+      <div class="summary-row summary-note">${data.otherNote || "未入力"}</div>
+    </div>
   `;
 }
+
+function buildSummaryText(data) {
   return [
     "【基本情報】",
     `日付：${data.workDateText}`,
@@ -319,8 +324,8 @@ async function sendReport() {
     console.error("送信エラー:", error);
     alert("送信に失敗しました。EmailJSの設定を確認してください。");
   } finally {
-    els.sendButton.disabled = false;
-    els.sendButton.textContent = originalText;
+    els.excelButton.disabled = false;
+    els.excelButton.textContent = originalText;
   }
 }
 
@@ -355,7 +360,7 @@ function bindEvents() {
   els.workDate.addEventListener("change", updateDatePreview);
   els.summaryButton.addEventListener("click", showSummary);
   els.clearButton.addEventListener("click", clearAll);
-  els.sendButton.addEventListener("click", sendReport);
+  els.excelButton.addEventListener("click", sendReport);
 }
 
 // ==============================
