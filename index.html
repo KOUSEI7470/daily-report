@@ -1,98 +1,89 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>作業日報入力</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>作業日報</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <main class="container">
+    <h1>作業日報</h1>
 
-  <div class="app">
-
-    <header class="app-header">
-      <h1>作業日報</h1>
-      <p>スマホ入力用</p>
-    </header>
-
-    <main class="container">
-
+    <form id="daily-report-form" class="report-form">
       <section class="card">
-        <h2 class="section-title">基本情報</h2>
+        <h2>基本情報</h2>
 
-        <div class="form-stack">
-
-          <div class="form-group">
-            <label for="workDate">日付</label>
-            <div class="date-row">
-              <input type="date" id="workDate">
-              <div id="datePreview" class="date-inline"></div>
-            </div>
+        <div class="field-grid">
+          <div class="field">
+            <label for="report-date">日付</label>
+            <input type="date" id="report-date" required />
           </div>
 
-          <div class="form-group">
-            <label for="destinationCompany">行先会社名</label>
-            <input type="text" id="destinationCompany" placeholder="例：〇〇建設">
+          <div class="field">
+            <label for="destination-company">行先会社名</label>
+            <input type="text" id="destination-company" placeholder="例：〇〇株式会社" />
           </div>
 
-          <div class="form-group">
-            <label for="meetingPlace">集合場所</label>
-            <input type="text" id="meetingPlace" placeholder="例：本社前">
+          <div class="field">
+            <label for="site-name">現場名</label>
+            <input type="text" id="site-name" placeholder="例：〇〇港北工区" required />
           </div>
 
-          <div class="form-group">
-            <label for="siteName">現場名</label>
-            <input type="text" id="siteName" placeholder="例：〇〇港補修工事">
+          <div class="field">
+            <label for="meeting-place">集合場所</label>
+            <input type="text" id="meeting-place" placeholder="例：〇〇港" />
           </div>
 
-          <div class="form-group narrow-group">
-            <label for="primeCompany">元請会社名</label>
-            <input type="text" id="primeCompany" placeholder="例：〇〇マリン">
+          <div class="field">
+            <label for="prime-contractor">元請会社名</label>
+            <input type="text" id="prime-contractor" placeholder="例：〇〇建設" />
           </div>
 
-          <div class="form-group narrow-group">
-            <label for="startTime">始業時間</label>
-            <input type="time" id="startTime">
+          <div class="field">
+            <label for="start-time">始業時間</label>
+            <input type="time" id="start-time" />
           </div>
 
-          <div class="form-group narrow-group">
-            <label for="endTime">終業時間</label>
-            <input type="time" id="endTime">
+          <div class="field">
+            <label for="end-time">終業時間</label>
+            <input type="time" id="end-time" />
           </div>
+        </div>
 
-          <div class="form-group">
-            <label for="otherNote">その他</label>
-            <textarea id="otherNote" rows="4" placeholder="連絡事項、作業内容、注意点などを入力"></textarea>
-          </div>
-
+        <div class="field">
+          <label for="remarks">その他</label>
+          <textarea id="remarks" rows="4" placeholder="連絡事項など"></textarea>
         </div>
       </section>
 
       <section class="card">
-        <h2 class="section-title">作業員選択</h2>
-        <div id="workerSections" class="worker-sections"></div>
+        <h2>潜水作業員</h2>
+        <div id="diver-list" class="worker-grid"></div>
       </section>
 
       <section class="card">
-        <div class="action-row">
-          <button id="clearButton" class="main-button secondary-button" type="button">全てクリア</button>
-          <button id="summaryButton" class="main-button" type="button">入力内容を整理表示</button>
-          <button id="excelButton" class="main-button excel-button" type="button">Excel出力</button>
-        </div>
+        <h2>陸上作業員</h2>
+        <div id="land-list" class="worker-grid"></div>
       </section>
 
       <section class="card">
-        <h2 class="section-title">表示</h2>
-        <div id="summaryArea" class="summary-area">ここに表示されます</div>
+        <h2>待機</h2>
+        <div id="standby-list" class="worker-grid"></div>
       </section>
 
-    </main>
+      <section class="card">
+        <h2>移動</h2>
+        <div id="moving-list" class="worker-grid"></div>
+      </section>
 
-  </div>
+      <div class="action-area">
+        <button id="send-button" type="button" class="primary-button">送信</button>
+      </div>
+    </form>
+  </main>
 
-  <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
-  <script src="script.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-　<script src="script.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
