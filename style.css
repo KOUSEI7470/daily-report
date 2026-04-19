@@ -268,3 +268,28 @@ textarea {
     min-width: 110px;
   }
 }
+
+@media (max-width: 600px) {
+  .worker-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .action-row {
+    grid-template-columns: 1fr;
+  }
+
+  .main-button {
+    width: 100%;
+  }
+
+  .narrow-group input {
+    width: 33.3333%;
+    min-width: 110px;
+  }
+}
+
+/* ← ここから追加 */
+.required {
+  color: red !important;
+  font-weight: bold;
+}
