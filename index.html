@@ -1,127 +1,96 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>作業日報</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>作業日報入力</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <main>
-    <h1>作業日報</h1>
 
-    <form id="daily-report-form">
-      <div>
-        <label for="report-date">日付</label>
-        <input type="date" id="report-date" name="report-date" required />
-      </div>
+  <div class="app">
 
-      <div>
-        <label for="destination-company">行先会社名</label>
-        <input type="text" id="destination-company" name="destination-company" />
-      </div>
+    <header class="app-header">
+      <h1>作業日報</h1>
+      <p>スマホ入力用</p>
+    </header>
 
-      <div>
-        <label for="site-name">現場名</label>
-        <input type="text" id="site-name" name="site-name" required />
-      </div>
+    <main class="container">
 
-      <div>
-        <label for="meeting-place">集合場所</label>
-        <input type="text" id="meeting-place" name="meeting-place" />
-      </div>
+      <section class="card">
+        <h2 class="section-title">基本情報</h2>
 
-      <div>
-        <label for="prime-contractor">元請会社名</label>
-        <input type="text" id="prime-contractor" name="prime-contractor" />
-      </div>
+        <div class="form-stack">
 
-      <div>
-        <label for="start-time">始業時間</label>
-        <input type="time" id="start-time" name="start-time" />
-      </div>
+          <div class="form-group">
+            <label for="workDate">日付</label>
+            <div class="date-row">
+              <input type="date" id="workDate">
+              <div id="datePreview" class="date-inline"></div>
+            </div>
+          </div>
 
-      <div>
-        <label for="end-time">終業時間</label>
-        <input type="time" id="end-time" name="end-time" />
-      </div>
+          <div class="form-group">
+            <label for="destinationCompany">行先会社名</label>
+            <input type="text" id="destinationCompany" placeholder="例：〇〇建設">
+          </div>
 
-      <div>
-        <label for="remarks">その他</label>
-        <textarea id="remarks" name="remarks" rows="4"></textarea>
-      </div>
+          <div class="form-group">
+            <label for="meetingPlace">集合場所</label>
+            <input type="text" id="meetingPlace" placeholder="例：本社前">
+          </div>
 
-      <section>
-        <h2>潜水作業員</h2>
-        <div>
-          <label><input type="checkbox" name="diver" value="潜水1"> 潜水1</label>
-          <label><input type="checkbox" name="diver" value="潜水2"> 潜水2</label>
-          <label><input type="checkbox" name="diver" value="潜水3"> 潜水3</label>
-          <label><input type="checkbox" name="diver" value="潜水4"> 潜水4</label>
-          <label><input type="checkbox" name="diver" value="潜水5"> 潜水5</label>
-          <label><input type="checkbox" name="diver" value="潜水6"> 潜水6</label>
-          <label><input type="checkbox" name="diver" value="潜水7"> 潜水7</label>
-          <label><input type="checkbox" name="diver" value="潜水8"> 潜水8</label>
-          <label><input type="checkbox" name="diver" value="潜水9"> 潜水9</label>
-          <label><input type="checkbox" name="diver" value="潜水10"> 潜水10</label>
+          <div class="form-group">
+            <label for="siteName">現場名</label>
+            <input type="text" id="siteName" placeholder="例：〇〇港補修工事">
+          </div>
+
+          <div class="form-group narrow-group">
+            <label for="primeCompany">元請会社名</label>
+            <input type="text" id="primeCompany" placeholder="例：〇〇マリン">
+          </div>
+
+          <div class="form-group narrow-group">
+            <label for="startTime">始業時間</label>
+            <input type="time" id="startTime">
+          </div>
+
+          <div class="form-group narrow-group">
+            <label for="endTime">終業時間</label>
+            <input type="time" id="endTime">
+          </div>
+
+          <div class="form-group">
+            <label for="otherNote">その他</label>
+            <textarea id="otherNote" rows="4" placeholder="連絡事項、作業内容、注意点などを入力"></textarea>
+          </div>
+
         </div>
       </section>
 
-      <section>
-        <h2>陸上作業員</h2>
-        <div>
-          <label><input type="checkbox" name="land" value="陸上1"> 陸上1</label>
-          <label><input type="checkbox" name="land" value="陸上2"> 陸上2</label>
-          <label><input type="checkbox" name="land" value="陸上3"> 陸上3</label>
-          <label><input type="checkbox" name="land" value="陸上4"> 陸上4</label>
-          <label><input type="checkbox" name="land" value="陸上5"> 陸上5</label>
-          <label><input type="checkbox" name="land" value="陸上6"> 陸上6</label>
-          <label><input type="checkbox" name="land" value="陸上7"> 陸上7</label>
-          <label><input type="checkbox" name="land" value="陸上8"> 陸上8</label>
-          <label><input type="checkbox" name="land" value="陸上9"> 陸上9</label>
-          <label><input type="checkbox" name="land" value="陸上10"> 陸上10</label>
+      <section class="card">
+        <h2 class="section-title">作業員選択</h2>
+        <div id="workerSections" class="worker-sections"></div>
+      </section>
+
+      <section class="card">
+        <div class="action-row">
+          <button id="clearButton" class="main-button secondary-button" type="button">全てクリア</button>
+          <button id="summaryButton" class="main-button" type="button">入力内容を整理表示</button>
+          <button id="excelButton" class="main-button excel-button" type="button">Excel出力</button>
         </div>
       </section>
 
-      <section>
-        <h2>待機</h2>
-        <div>
-          <label><input type="checkbox" name="standby" value="待機1"> 待機1</label>
-          <label><input type="checkbox" name="standby" value="待機2"> 待機2</label>
-          <label><input type="checkbox" name="standby" value="待機3"> 待機3</label>
-          <label><input type="checkbox" name="standby" value="待機4"> 待機4</label>
-          <label><input type="checkbox" name="standby" value="待機5"> 待機5</label>
-          <label><input type="checkbox" name="standby" value="待機6"> 待機6</label>
-          <label><input type="checkbox" name="standby" value="待機7"> 待機7</label>
-          <label><input type="checkbox" name="standby" value="待機8"> 待機8</label>
-          <label><input type="checkbox" name="standby" value="待機9"> 待機9</label>
-          <label><input type="checkbox" name="standby" value="待機10"> 待機10</label>
-        </div>
+      <section class="card">
+        <h2 class="section-title">表示</h2>
+        <div id="summaryArea" class="summary-area">ここに表示されます</div>
       </section>
 
-      <section>
-        <h2>移動</h2>
-        <div>
-          <label><input type="checkbox" name="moving" value="移動1"> 移動1</label>
-          <label><input type="checkbox" name="moving" value="移動2"> 移動2</label>
-          <label><input type="checkbox" name="moving" value="移動3"> 移動3</label>
-          <label><input type="checkbox" name="moving" value="移動4"> 移動4</label>
-          <label><input type="checkbox" name="moving" value="移動5"> 移動5</label>
-          <label><input type="checkbox" name="moving" value="移動6"> 移動6</label>
-          <label><input type="checkbox" name="moving" value="移動7"> 移動7</label>
-          <label><input type="checkbox" name="moving" value="移動8"> 移動8</label>
-          <label><input type="checkbox" name="moving" value="移動9"> 移動9</label>
-          <label><input type="checkbox" name="moving" value="移動10"> 移動10</label>
-        </div>
-      </section>
+    </main>
 
-      <div>
-        <button id="send-button" type="button">送信</button>
-      </div>
-    </form>
-  </main>
+  </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
   <script src="script.js"></script>
 </body>
 </html>

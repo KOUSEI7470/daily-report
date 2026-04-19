@@ -2,134 +2,265 @@
   box-sizing: border-box;
 }
 
+:root {
+  --bg1: #0a4a7a;
+  --bg2: #0f6aa8;
+  --bg3: #6bc1ea;
+
+  --card: rgba(255, 255, 255, 0.14);
+  --card-border: rgba(255, 255, 255, 0.18);
+
+  --input-bg: #eef7fc;
+  --input-border: #b8d6e7;
+
+  --text: #08324f;
+  --text-light: #eff9ff;
+
+  --shadow: 0 10px 24px rgba(0, 0, 0, 0.14);
+
+  --btn-off-bg1: #d9e2e8;
+  --btn-off-bg2: #c9d3da;
+  --btn-off-text: #3f4d58;
+
+  --btn-on-bg1: #1f88d1;
+  --btn-on-bg2: #0f68ad;
+  --btn-on-text: #ffffff;
+}
+
 body {
   margin: 0;
-  font-family: "Yu Gothic UI", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
-  background: linear-gradient(180deg, #eef4ff 0%, #dfeaff 100%);
-  color: #222;
+  font-family: "Yu Gothic UI", "Yu Gothic", "Meiryo", sans-serif;
+  background: linear-gradient(160deg, var(--bg1), var(--bg2), var(--bg3));
+  min-height: 100vh;
+  color: var(--text-light);
+}
+
+.app {
+  padding: 8px;
 }
 
 .container {
-  max-width: 760px;
+  max-width: 960px;
   margin: 0 auto;
-  padding: 16px;
 }
 
-h1 {
-  margin: 0 0 16px;
-  font-size: 28px;
+.app-header {
   text-align: center;
+  margin-bottom: 8px;
 }
 
-h2 {
-  margin: 0 0 12px;
-  font-size: 18px;
+.app-header h1 {
+  margin: 0;
+  font-size: 1.35rem;
 }
 
-.report-form {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
+.app-header p {
+  margin: 2px 0 0;
+  font-size: 0.8rem;
 }
 
 .card {
-  background: rgba(255, 255, 255, 0.95);
-  border-radius: 16px;
-  padding: 16px;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: 14px;
+  backdrop-filter: blur(8px);
+  box-shadow: var(--shadow);
+  padding: 10px;
+  margin-bottom: 8px;
 }
 
-.field-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 12px;
+.section-title {
+  font-size: 0.95rem;
+  margin: 0 0 8px;
 }
 
-.field {
+.form-stack {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
 }
 
 label {
-  font-size: 14px;
+  font-size: 0.76rem;
+  margin-bottom: 3px;
   font-weight: 700;
 }
 
 input,
 textarea {
   width: 100%;
-  border: 1px solid #c8d5f0;
-  border-radius: 10px;
-  padding: 10px 12px;
-  font-size: 16px;
-  background: #f8fbff;
+  min-width: 0;
+  padding: 7px 8px;
+  font-size: 13px;
+  border-radius: 8px;
+  border: 1px solid var(--input-border);
+  background: var(--input-bg);
+  color: var(--text);
 }
 
 textarea {
+  min-height: 72px;
   resize: vertical;
+}
+
+#siteName {
+  font-size: 14px;
+}
+
+#destinationCompany,
+#meetingPlace {
+  width: 85%;
+  max-width: 320px;
+  min-width: 180px;
+}
+
+/* 日付は小さく、曜日は下に表示 */
+.date-row {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+}
+
+#workDate {
+  width: 150px;
+  max-width: 100%;
+  font-size: 12px;
+  padding: 5px 6px;
+}
+
+.date-inline {
+  font-size: 0.78rem;
+  font-weight: 700;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.weekday {
+  color: #ffffff;
+}
+
+.sat {
+  color: #4fc3ff;
+}
+
+.sun {
+  color: #ff6b6b;
+}
+
+/* 元請・始業・終業は1/3幅 */
+.narrow-group input {
+  width: 33.3333%;
+  min-width: 120px;
+  max-width: 220px;
+}
+
+/* 作業員 */
+.worker-sections {
+  display: grid;
+  gap: 6px;
+}
+
+.worker-block {
+  margin-bottom: 4px;
+}
+
+.worker-title {
+  font-size: 0.85rem;
+  margin: 0 0 4px;
 }
 
 .worker-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 10px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 6px;
 }
 
-.worker-label {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 48px;
-  border: 1px solid #b9c9ea;
-  border-radius: 12px;
-  background: #f6f9ff;
-  cursor: pointer;
-  user-select: none;
-  font-weight: 700;
-  text-align: center;
-  padding: 8px;
-}
-
-.worker-label input {
-  display: none;
-}
-
-.worker-label.selected {
-  background: #d8e8ff;
-  border-color: #6d9ee8;
-}
-
-.action-area {
-  position: sticky;
-  bottom: 0;
-  padding-bottom: 8px;
-}
-
-.primary-button {
-  width: 100%;
+.worker-button {
   border: none;
-  border-radius: 14px;
-  padding: 14px 16px;
-  font-size: 18px;
+  border-radius: 10px;
+  padding: 8px 4px;
+  min-height: 42px;
+  font-size: 0.75rem;
   font-weight: 700;
-  background: #2f6fdf;
-  color: #fff;
-  cursor: pointer;
-  box-shadow: 0 8px 18px rgba(47, 111, 223, 0.28);
+  line-height: 1.2;
+  background: linear-gradient(180deg, var(--btn-off-bg1), var(--btn-off-bg2));
+  color: var(--btn-off-text);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.6),
+    0 2px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.15s;
+  min-width: 0;
 }
 
-.primary-button:disabled {
-  opacity: 0.65;
-  cursor: not-allowed;
+.worker-button:active {
+  transform: scale(0.95);
 }
 
-@media (min-width: 700px) {
-  .field-grid {
-    grid-template-columns: repeat(2, 1fr);
+.worker-button.active {
+  background: linear-gradient(180deg, var(--btn-on-bg1), var(--btn-on-bg2));
+  color: #ffffff;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* 操作ボタン */
+.action-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 6px;
+}
+
+.main-button {
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+  font-size: 0.85rem;
+  font-weight: 700;
+  background: #0f6eb7;
+  color: #ffffff;
+}
+
+.secondary-button {
+  background: #7d96a8;
+}
+
+.excel-button {
+  background: #127a52;
+}
+
+/* 表示欄 */
+.summary-area {
+  background: #eef8ff;
+  color: var(--text);
+  padding: 8px;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  min-height: 60px;
+  white-space: pre-wrap;
+}
+
+/* スマホ */
+@media (max-width: 600px) {
+  .worker-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
-  .worker-grid {
-    grid-template-columns: repeat(3, 1fr);
+  .action-row {
+    grid-template-columns: 1fr;
+  }
+
+  .main-button {
+    width: 100%;
+  }
+
+  .narrow-group input {
+    width: 33.3333%;
+    min-width: 110px;
   }
 }
