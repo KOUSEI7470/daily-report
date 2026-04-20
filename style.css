@@ -196,7 +196,6 @@ textarea {
     inset 0 1px 0 rgba(255, 255, 255, 0.6),
     0 2px 6px rgba(0, 0, 0, 0.1);
   transition: all 0.15s;
-  min-width: 0;
   appearance: none;
   -webkit-appearance: none;
   -webkit-tap-highlight-color: transparent;
