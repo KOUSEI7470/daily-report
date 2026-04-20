@@ -392,16 +392,22 @@ function bindEvents() {
 
   if (els.startTime) {
     els.startTime.setAttribute("step", "300");
-    els.startTime.addEventListener("change", () => {
+    const snapStartTime = () => {
       els.startTime.value = roundTimeStringToStep(els.startTime.value, 300);
-    });
+    };
+    els.startTime.addEventListener("input", snapStartTime);
+    els.startTime.addEventListener("change", snapStartTime);
+    els.startTime.addEventListener("blur", snapStartTime);
   }
 
   if (els.endTime) {
     els.endTime.setAttribute("step", "300");
-    els.endTime.addEventListener("change", () => {
+    const snapEndTime = () => {
       els.endTime.value = roundTimeStringToStep(els.endTime.value, 300);
-    });
+    };
+    els.endTime.addEventListener("input", snapEndTime);
+    els.endTime.addEventListener("change", snapEndTime);
+    els.endTime.addEventListener("blur", snapEndTime);
   }
 }
 
