@@ -200,6 +200,13 @@ textarea {
   appearance: none;
   -webkit-appearance: none;
   -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  -webkit-touch-callout: none;
+}
+
+.worker-button:focus,
+.worker-button:focus-visible {
+  outline: none;
 }
 
 .worker-button:active {
@@ -208,7 +215,8 @@ textarea {
 
 .worker-button.active,
 .worker-button.active:focus,
-.worker-button.active:focus-visible {
+.worker-button.active:focus-visible,
+.worker-button.active:active {
   background: linear-gradient(180deg, var(--btn-on-bg1), var(--btn-on-bg2)) !important;
   color: var(--btn-on-text) !important;
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
