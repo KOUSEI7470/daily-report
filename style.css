@@ -1,0 +1,332 @@
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  --bg1: #0a4a7a;
+  --bg2: #0f6aa8;
+  --bg3: #6bc1ea;
+
+  --card: rgba(255, 255, 255, 0.14);
+  --card-border: rgba(255, 255, 255, 0.18);
+
+  --input-bg: #eef7fc;
+  --input-border: #b8d6e7;
+
+  --text: #08324f;
+  --text-light: #eff9ff;
+
+  --shadow: 0 10px 24px rgba(0, 0, 0, 0.14);
+
+  --btn-off-bg1: #d9e2e8;
+  --btn-off-bg2: #c9d3da;
+  --btn-off-text: #3f4d58;
+
+ --btn-on-bg1: #28a745;   /* 明るい緑 */
+ --btn-on-bg2: #1e7e34;   /* 濃い緑 */
+  --btn-on-text: #ffffff;
+}
+
+body {
+  margin: 0;
+  font-family: "Yu Gothic UI", "Yu Gothic", "Meiryo", sans-serif;
+  background: linear-gradient(160deg, var(--bg1), var(--bg2), var(--bg3));
+  min-height: 100vh;
+  color: var(--text-light);
+}
+
+.app {
+  padding: 8px;
+}
+
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.app-header {
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.app-header h1 {
+  margin: 0;
+  font-size: 1.35rem;
+}
+
+.app-header p {
+  margin: 2px 0 0;
+  font-size: 0.8rem;
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: 14px;
+  backdrop-filter: blur(8px);
+  box-shadow: var(--shadow);
+  padding: 10px;
+  margin-bottom: 8px;
+}
+
+.section-title {
+  font-size: 0.95rem;
+  margin: 0 0 8px;
+}
+
+.form-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+label {
+  font-size: 0.76rem;
+  margin-bottom: 3px;
+  font-weight: 700;
+}
+
+input,
+textarea {
+  width: 100%;
+  min-width: 0;
+  padding: 7px 8px;
+  font-size: 13px;
+  border-radius: 8px;
+  border: 1px solid var(--input-border);
+  background: var(--input-bg);
+  color: var(--text);
+}
+
+textarea {
+  min-height: 72px;
+  resize: vertical;
+}
+
+#siteName {
+  font-size: 14px;
+}
+
+#destinationCompany,
+#meetingPlace {
+  width: 85%;
+  max-width: 320px;
+  min-width: 180px;
+}
+
+/* 日付は小さく、曜日は下に表示 */
+.date-row {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+}
+
+#workDate {
+  width: 150px;
+  max-width: 100%;
+  font-size: 12px;
+  padding: 5px 6px;
+}
+
+.date-inline {
+  font-size: 0.78rem;
+  font-weight: 700;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.weekday {
+  color: #ffffff;
+}
+
+.sat {
+  color: #4fc3ff;
+}
+
+.sun {
+  color: #ff6b6b;
+}
+
+/* 元請・始業・終業は1/3幅 */
+.narrow-group input {
+  width: 33.3333%;
+  min-width: 120px;
+  max-width: 220px;
+}
+
+/* 作業員 */
+.worker-sections {
+  display: grid;
+  gap: 6px;
+}
+
+.worker-block {
+  margin-bottom: 4px;
+}
+
+.worker-title {
+  font-size: 0.85rem;
+  margin: 0 0 4px;
+}
+
+.worker-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.worker-button {
+  border: none;
+  border-radius: 10px;
+  padding: 8px 4px;
+  min-height: 42px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1.2;
+  background: linear-gradient(180deg, var(--btn-off-bg1), var(--btn-off-bg2));
+  color: var(--btn-off-text);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.6),
+    0 2px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.15s;
+  min-width: 0;
+  appearance: none;
+  -webkit-appearance: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  -webkit-touch-callout: none;
+}
+
+.worker-button:focus,
+.worker-button:focus-visible {
+  outline: none;
+}
+
+.worker-button:active {
+  transform: scale(0.95);
+}
+
+.worker-button.active,
+.worker-button.active:focus,
+.worker-button.active:focus-visible,
+.worker-button.active:active {
+  background: linear-gradient(180deg, var(--btn-on-bg1), var(--btn-on-bg2)) !important;
+  color: var(--btn-on-text) !important;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* 操作ボタン */
+.action-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 6px;
+}
+
+.main-button {
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+  font-size: 0.85rem;
+  font-weight: 700;
+  background: #0f6eb7;
+  color: #ffffff;
+}
+
+.secondary-button {
+  background: #7d96a8;
+}
+
+.send-button {
+  background: #127a52;
+}
+
+.main-button:disabled {
+  opacity: 0.7;
+}
+
+/* 表示欄 */
+.summary-area {
+  background: #eef8ff;
+  color: var(--text);
+  padding: 12px;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  min-height: 80px;
+  white-space: normal;
+}
+
+.summary-section {
+  margin-bottom: 12px;
+}
+
+.summary-section h3 {
+  margin: 0 0 8px;
+  font-size: 0.92rem;
+  color: var(--text);
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(8, 50, 79, 0.08);
+}
+
+.summary-row:last-child {
+  border-bottom: none;
+}
+
+.summary-label {
+  font-weight: 700;
+}
+
+.summary-note {
+  display: block;
+  white-space: pre-wrap;
+  line-height: 1.4;
+}
+
+/* スマホ */
+@media (max-width: 600px) {
+  .worker-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 4px;
+  }
+
+  .worker-button {
+    font-size: 0.68rem;
+    padding: 6px 3px;
+    min-height: 38px;
+  }
+
+  .action-row {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+
+  .main-button {
+    width: 100%;
+    font-size: 0.75rem;
+    padding: 8px;
+  }
+
+  .narrow-group input {
+    width: 33.3333%;
+    min-width: 110px;
+  }
+}
+
+
+
+/* ← ここから追加 */
+.required {
+  color: red !important;
+  font-weight: bold;
+}
