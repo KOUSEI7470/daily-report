@@ -244,9 +244,9 @@ function showSummary() {
 // ==============================
 function buildMailBody(data) {
   return [
-    "【作業日報】",
+    "【作業日報テスト999】",
     "",
-    `日付：${data.workDateText}`,
+    `日付：${data.workDateText || "未入力"}`,
     `行先会社名：${data.destinationCompany || "未入力"}`,
     `現場名：${data.siteName || "未入力"}`,
     `集合場所：${data.meetingPlace || "未入力"}`,
@@ -307,25 +307,15 @@ async function sendReport() {
   }
 
   const originalText = els.excelButton.textContent;
+  const mailBody = buildMailBody(data);
 
   try {
     els.excelButton.disabled = true;
     els.excelButton.textContent = "送信中...";
 
     const templateParams = {
-      work_date: data.workDateText,
-      destination_company: data.destinationCompany || "未入力",
-      site_name: data.siteName || "未入力",
-      meeting_place: data.meetingPlace || "未入力",
-      prime_company: data.primeCompany || "未入力",
-      start_time: data.startTime || "未入力",
-      end_time: data.endTime || "未入力",
-      diving_workers: joinWorkerNames(data.diving),
-      land_workers: joinWorkerNames(data.land),
-      standby_workers: joinWorkerNames(data.standby),
-      move_workers: joinWorkerNames(data.move),
-      other_note: data.otherNote || "未入力",
-      message: buildMailBody(data)
+      subject: `作業日報 ${data.workDateText || ""} ${data.siteName || ""}`,
+      message: mailBody
     };
 
     await emailjs.send(
@@ -334,7 +324,8 @@ async function sendReport() {
       templateParams
     );
 
-    els.summaryArea.innerHTML = buildSummaryHTML(data) + "<br><br><strong>送信完了しました。</strong>";
+    els.summaryArea.innerHTML =
+      buildSummaryHTML(data) + "<br><br><strong>送信完了しました。</strong>";
     alert("送信が完了しました。");
   } catch (error) {
     console.error("送信エラー:", error);
