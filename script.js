@@ -313,15 +313,12 @@ async function sendReport() {
     els.excelButton.disabled = true;
     els.excelButton.textContent = "送信中...";
 
-    const templateParams = {
-      subject: `作業日報 ${data.workDateText || ""} ${data.siteName || ""}`,
-      message: mailBody
-    };
-
     await emailjs.send(
       EMAILJS_SERVICE_ID,
       EMAILJS_TEMPLATE_ID,
-      templateParams
+      {
+        message: mailBody
+      }
     );
 
     els.summaryArea.innerHTML =
