@@ -22,8 +22,8 @@
   --btn-off-bg2: #c9d3da;
   --btn-off-text: #3f4d58;
 
-  --btn-on-bg1: #1f88d1;
-  --btn-on-bg2: #0f68ad;
+ --btn-on-bg1: #28a745;   /* 明るい緑 */
+ --btn-on-bg2: #1e7e34;   /* 濃い緑 */
   --btn-on-text: #ffffff;
 }
 
