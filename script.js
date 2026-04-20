@@ -310,21 +310,27 @@ async function sendReport() {
   const mailBody = buildMailBody(data);
 
   try {
-    els.excelButton.disabled = true;
-    els.excelButton.textContent = "送信中...";
+  els.excelButton.disabled = true;
+  els.excelButton.textContent = "送信中...";
 
-    await emailjs.send(
-      EMAILJS_SERVICE_ID,
-      EMAILJS_TEMPLATE_ID,
-      {
-        message: mailBody
-      }
-    );
+  alert(
+    "PK=" + (EMAILJS_PUBLIC_KEY ? "OK" : "NG") + "\n" +
+    "SID=" + (EMAILJS_SERVICE_ID ? "OK" : "NG") + "\n" +
+    "TID=" + (EMAILJS_TEMPLATE_ID ? "OK" : "NG")
+  );
 
-    els.summaryArea.innerHTML =
-      buildSummaryHTML(data) + "<br><br><strong>送信完了しました。</strong>";
-    alert("送信が完了しました。");
-  } catch (error) {
+  await emailjs.send(
+    EMAILJS_SERVICE_ID,
+    EMAILJS_TEMPLATE_ID,
+    {
+      message: mailBody
+    }
+  );
+
+  els.summaryArea.innerHTML =
+    buildSummaryHTML(data) + "<br><br><strong>送信完了しました。</strong>";
+  alert("送信が完了しました。");
+} catch (error) {
   console.error("送信エラー:", error);
 
   const message = error?.message || "なし";
