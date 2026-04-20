@@ -325,12 +325,22 @@ async function sendReport() {
       buildSummaryHTML(data) + "<br><br><strong>送信完了しました。</strong>";
     alert("送信が完了しました。");
   } catch (error) {
-    console.error("送信エラー:", error);
-    alert("送信に失敗しました。EmailJSの設定を確認してください。");
-  } finally {
-    els.excelButton.disabled = false;
-    els.excelButton.textContent = originalText;
-  }
+  console.error("送信エラー:", error);
+
+  const message = error?.message || "なし";
+  const text = error?.text || "なし";
+  const status = error?.status || "なし";
+
+  alert(
+    "送信失敗\n\n" +
+    "message: " + message + "\n" +
+    "text: " + text + "\n" +
+    "status: " + status
+  );
+} finally {
+  els.excelButton.disabled = false;
+  els.excelButton.textContent = originalText;
+}
 }
 
 // ==============================
