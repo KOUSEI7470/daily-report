@@ -369,6 +369,18 @@ function clearAll() {
   els.summaryArea.textContent = "ここに表示";
 }
 
+function roundTimeStringToStep(timeString, stepSeconds = 300) {
+  if (!timeString) return "";
+  const [hours, minutes] = timeString.split(":").map(Number);
+  if (Number.isNaN(hours) || Number.isNaN(minutes)) return timeString;
+
+  const totalSeconds = hours * 3600 + minutes * 60;
+  const steppedSeconds = Math.round(totalSeconds / stepSeconds) * stepSeconds;
+  const steppedHours = Math.floor((steppedSeconds % 86400) / 3600);
+  const steppedMinutes = Math.floor((steppedSeconds % 3600) / 60);
+  return `${String(steppedHours).padStart(2, "0")}:${String(steppedMinutes).padStart(2, "0")}`;
+}
+
 // ==============================
 // イベント登録
 // ==============================
@@ -377,6 +389,20 @@ function bindEvents() {
   els.summaryButton.addEventListener("click", showSummary);
   els.clearButton.addEventListener("click", clearAll);
   els.excelButton.addEventListener("click", sendReport);
+
+  if (els.startTime) {
+    els.startTime.setAttribute("step", "300");
+    els.startTime.addEventListener("change", () => {
+      els.startTime.value = roundTimeStringToStep(els.startTime.value, 300);
+    });
+  }
+
+  if (els.endTime) {
+    els.endTime.setAttribute("step", "300");
+    els.endTime.addEventListener("change", () => {
+      els.endTime.value = roundTimeStringToStep(els.endTime.value, 300);
+    });
+  }
 }
 
 // ==============================
