@@ -244,9 +244,9 @@ function showSummary() {
 // ==============================
 function buildMailBody(data) {
   return [
-    "【作業日報テスト999】",
+    "【作業日報】",
     "",
-    `日付：${data.workDateText || "未入力"}`,
+    `日付：${data.workDateText}`,
     `行先会社名：${data.destinationCompany || "未入力"}`,
     `現場名：${data.siteName || "未入力"}`,
     `集合場所：${data.meetingPlace || "未入力"}`,
@@ -307,22 +307,34 @@ async function sendReport() {
   }
 
   const originalText = els.excelButton.textContent;
-  const mailBody = buildMailBody(data);
 
   try {
     els.excelButton.disabled = true;
     els.excelButton.textContent = "送信中...";
 
+    const templateParams = {
+      work_date: data.workDateText,
+      destination_company: data.destinationCompany || "未入力",
+      site_name: data.siteName || "未入力",
+      meeting_place: data.meetingPlace || "未入力",
+      prime_company: data.primeCompany || "未入力",
+      start_time: data.startTime || "未入力",
+      end_time: data.endTime || "未入力",
+      diving_workers: joinWorkerNames(data.diving),
+      land_workers: joinWorkerNames(data.land),
+      standby_workers: joinWorkerNames(data.standby),
+      move_workers: joinWorkerNames(data.move),
+      other_note: data.otherNote || "未入力",
+      message: buildMailBody(data)
+    };
+
     await emailjs.send(
       EMAILJS_SERVICE_ID,
       EMAILJS_TEMPLATE_ID,
-      {
-        message: mailBody
-      }
+      templateParams
     );
 
-    els.summaryArea.innerHTML =
-      buildSummaryHTML(data) + "<br><br><strong>送信完了しました。</strong>";
+    els.summaryArea.innerHTML = buildSummaryHTML(data) + "<br><br><strong>送信完了しました。</strong>";
     alert("送信が完了しました。");
   } catch (error) {
     console.error("送信エラー:", error);
@@ -357,18 +369,6 @@ function clearAll() {
   els.summaryArea.textContent = "ここに表示";
 }
 
-function roundTimeStringToStep(timeString, stepSeconds = 300) {
-  if (!timeString) return "";
-  const [hours, minutes] = timeString.split(":").map(Number);
-  if (Number.isNaN(hours) || Number.isNaN(minutes)) return timeString;
-
-  const totalSeconds = hours * 3600 + minutes * 60;
-  const steppedSeconds = Math.round(totalSeconds / stepSeconds) * stepSeconds;
-  const steppedHours = Math.floor((steppedSeconds % 86400) / 3600);
-  const steppedMinutes = Math.floor((steppedSeconds % 3600) / 60);
-  return `${String(steppedHours).padStart(2, "0")}:${String(steppedMinutes).padStart(2, "0")}`;
-}
-
 // ==============================
 // イベント登録
 // ==============================
@@ -377,26 +377,6 @@ function bindEvents() {
   els.summaryButton.addEventListener("click", showSummary);
   els.clearButton.addEventListener("click", clearAll);
   els.excelButton.addEventListener("click", sendReport);
-
-  if (els.startTime) {
-    els.startTime.setAttribute("step", "300");
-    const snapStartTime = () => {
-      els.startTime.value = roundTimeStringToStep(els.startTime.value, 300);
-    };
-    els.startTime.addEventListener("input", snapStartTime);
-    els.startTime.addEventListener("change", snapStartTime);
-    els.startTime.addEventListener("blur", snapStartTime);
-  }
-
-  if (els.endTime) {
-    els.endTime.setAttribute("step", "300");
-    const snapEndTime = () => {
-      els.endTime.value = roundTimeStringToStep(els.endTime.value, 300);
-    };
-    els.endTime.addEventListener("input", snapEndTime);
-    els.endTime.addEventListener("change", snapEndTime);
-    els.endTime.addEventListener("blur", snapEndTime);
-  }
 }
 
 // ==============================
