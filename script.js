@@ -1,9 +1,9 @@
 // ==============================
 // EmailJS 設定（config.js 参照）
 // ==============================
-const EMAILJS_PUBLIC_KEY = EMAILJS_CONFIG.publicKey;
-const EMAILJS_SERVICE_ID = EMAILJS_CONFIG.serviceId;
-const EMAILJS_TEMPLATE_ID = EMAILJS_CONFIG.templateId;
+const EMAILJS_PUBLIC_KEY = window.EMAILJS_CONFIG?.publicKey || "";
+const EMAILJS_SERVICE_ID = window.EMAILJS_CONFIG?.serviceId || "";
+const EMAILJS_TEMPLATE_ID = window.EMAILJS_CONFIG?.templateId || "";
 
 // ==============================
 // 作業員名
@@ -403,9 +403,11 @@ function bindEvents() {
 // 初期化
 // ==============================
 function init() {
-  emailjs.init({
-    publicKey: EMAILJS_PUBLIC_KEY
-  });
+  if (typeof emailjs !== "undefined" && EMAILJS_PUBLIC_KEY) {
+    emailjs.init({
+      publicKey: EMAILJS_PUBLIC_KEY
+    });
+  }
 
   createWorkerSections();
   setTodayDate();
