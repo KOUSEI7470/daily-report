@@ -1,4 +1,4 @@
-alert("script loaded 2026-04-21");
+document.title = "TEST-20260421";
 // ==============================
 // EmailJS 設定（config.js 参照）
 // ==============================
@@ -319,14 +319,16 @@ async function sendReport() {
     "TID=" + (EMAILJS_TEMPLATE_ID ? "OK" : "NG")
   );
 
-  await emailjs.send(
-    EMAILJS_SERVICE_ID,
-    EMAILJS_TEMPLATE_ID,
-    {
-      message: mailBody
-    }
-  );
+  alert(mailBody);
 
+await emailjs.send(
+  EMAILJS_SERVICE_ID,
+  EMAILJS_TEMPLATE_ID,
+  {
+    message: mailBody,
+    marker: "BODY-TEST-20260421"
+  }
+);
   els.summaryArea.innerHTML =
     buildSummaryHTML(data) + "<br><br><strong>送信完了しました。</strong>";
   alert("送信が完了しました。");
