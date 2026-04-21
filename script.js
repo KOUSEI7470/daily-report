@@ -1,3 +1,7 @@
+alert(
+  "window.EMAILJS_CONFIG = " +
+  JSON.stringify(window.EMAILJS_CONFIG || null)
+);
 // ==============================
 // EmailJS 設定（config.js 参照）
 // ==============================
