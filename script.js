@@ -1,14 +1,10 @@
-alert(
-  "window.EMAILJS_CONFIG = " +
-  JSON.stringify(window.EMAILJS_CONFIG || null)
-);
+
 // ==============================
 // EmailJS 設定（config.js 参照）
 // ==============================
-const EMAILJS_PUBLIC_KEY = window.EMAILJS_CONFIG?.publicKey || "";
-const EMAILJS_SERVICE_ID = window.EMAILJS_CONFIG?.serviceId || "";
-const EMAILJS_TEMPLATE_ID = window.EMAILJS_CONFIG?.templateId || "";
-
+const EMAILJS_PUBLIC_KEY = "FJ_Q4zW5VxWLBtU8w";
+const EMAILJS_SERVICE_ID = "service_3cg2lei";
+const EMAILJS_TEMPLATE_ID = "template_1s831pc";
 // ==============================
 // 作業員名
 // ==============================
