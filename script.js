@@ -223,6 +223,7 @@ function buildSummaryHTML(data) {
     <div>元請会社名：${data.primeCompany || "未入力"}</div>
     <div>始業時間：${data.startTime || "未入力"}</div>
     <div>終業時間：${data.endTime || "未入力"}</div>
+    <div>作業内容：${(data.workContent || "未入力").replace(/\n/g, "<br>")}</div>
     <br>
     <div><strong>【作業員分類】</strong></div>
     <div>潜水作業員：${joinWorkerNames(data.diving)}</div>
