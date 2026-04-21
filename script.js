@@ -171,6 +171,7 @@ function getFormData() {
     primeCompany: getInputValue(els.primeCompany),
     startTime: getInputValue(els.startTime),
     endTime: getInputValue(els.endTime),
+    workContent: getInputValue(document.getElementById("work-content")),
     otherNote: getInputValue(els.otherNote),
     diving: Array.from(selectedWorkers.diving),
     land: Array.from(selectedWorkers.land),
@@ -253,6 +254,10 @@ function buildMailBody(data) {
     `元請会社名：${data.primeCompany || "未入力"}`,
     `始業時間：${data.startTime || "未入力"}`,
     `終業時間：${data.endTime || "未入力"}`,
+
+    // ★ここ追加
+    `作業内容：${data.workContent || "未入力"}`,
+
     "",
     "【作業員分類】",
     `潜水作業員：${joinWorkerNames(data.diving)}`,
