@@ -10,6 +10,7 @@ const EMAILJS_TEMPLATE_ID = window.EMAILJS_CONFIG?.templateId || "";
 
 // ==============================
 // 作業員名
+// 冨山航生を削除
 // ==============================
 const workerNames = [
   "藤田大伸",
@@ -26,34 +27,17 @@ const workerNames = [
 
 // ==============================
 // 分類
-// 表示順がそのまま画面順
 // ==============================
 const categories = [
-  {
-    key: "diving",
-    label: "潜水作業員",
-    shortLabel: "潜水"
-  },
-  {
-    key: "land",
-    label: "陸上作業員",
-    shortLabel: "陸上"
-  },
-  {
-    key: "standby",
-    label: "待機",
-    shortLabel: "待機"
-  },
-  {
-    key: "move",
-    label: "移動",
-    shortLabel: "移動"
-  }
+  { key: "diving", label: "潜水作業員", shortLabel: "潜水" },
+  { key: "land", label: "陸上作業員", shortLabel: "陸上" },
+  { key: "standby", label: "待機", shortLabel: "待機" },
+  { key: "move", label: "移動", shortLabel: "移動" }
 ];
 
 
 // ==============================
-// 固定作業員の選択状態
+// 選択状態
 // ==============================
 const selectedWorkers = {
   diving: new Set(),
@@ -64,10 +48,9 @@ const selectedWorkers = {
 
 
 // ==============================
-// 予備作業員
-// 臨時で氏名を入力する
+// 手入力作業員
 // ==============================
-const customWorkerNames = {
+const manualWorkers = {
   diving: "",
   land: "",
   standby: "",
@@ -76,122 +59,63 @@ const customWorkerNames = {
 
 
 // ==============================
-// HTML要素取得
+// 要素取得
 // ==============================
 const els = {
-
-  workDate:
-    document.getElementById("workDate"),
-
-  datePreview:
-    document.getElementById("datePreview"),
-
-  destinationCompany:
-    document.getElementById("destinationCompany"),
-
-  siteName:
-    document.getElementById("siteName"),
-
-  meetingPlace:
-    document.getElementById("meetingPlace"),
-
-  primeCompany:
-    document.getElementById("primeCompany"),
-
-  startTime:
-    document.getElementById("startTime"),
-
-  endTime:
-    document.getElementById("endTime"),
-
-  otherNote:
-    document.getElementById("otherNote"),
-
-  workerSections:
-    document.getElementById("workerSections"),
-
-  clearButton:
-    document.getElementById("clearButton"),
-
-  summaryButton:
-    document.getElementById("summaryButton"),
-
-  excelButton:
-    document.getElementById("excelButton"),
-
-  summaryArea:
-    document.getElementById("summaryArea")
+  workDate: document.getElementById("workDate"),
+  datePreview: document.getElementById("datePreview"),
+  destinationCompany: document.getElementById("destinationCompany"),
+  siteName: document.getElementById("siteName"),
+  meetingPlace: document.getElementById("meetingPlace"),
+  primeCompany: document.getElementById("primeCompany"),
+  startTime: document.getElementById("startTime"),
+  endTime: document.getElementById("endTime"),
+  otherNote: document.getElementById("otherNote"),
+  workerSections: document.getElementById("workerSections"),
+  clearButton: document.getElementById("clearButton"),
+  summaryButton: document.getElementById("summaryButton"),
+  excelButton: document.getElementById("excelButton"),
+  summaryArea: document.getElementById("summaryArea")
 };
 
 
 // ==============================
 // 日付関連
 // ==============================
-
 function setTodayDate() {
-
   const today = new Date();
 
-  const yyyy =
-    today.getFullYear();
+  const yyyy = today.getFullYear();
+  const mm = String(today.getMonth() + 1).padStart(2, "0");
+  const dd = String(today.getDate()).padStart(2, "0");
 
-  const mm =
-    String(today.getMonth() + 1)
-      .padStart(2, "0");
-
-  const dd =
-    String(today.getDate())
-      .padStart(2, "0");
-
-  els.workDate.value =
-    `${yyyy}-${mm}-${dd}`;
+  els.workDate.value = `${yyyy}-${mm}-${dd}`;
 
   updateDatePreview();
 }
 
 
-// ------------------------------
-// 2026-08-25
-// ↓
-// 2026/8/25
-// ------------------------------
 function formatDateSlash(dateString) {
+  if (!dateString) return "";
 
-  if (!dateString) {
-    return "";
-  }
-
-  const date =
-    new Date(dateString);
+  const date = new Date(dateString);
 
   if (Number.isNaN(date.getTime())) {
     return "";
   }
 
-  const y =
-    date.getFullYear();
-
-  const m =
-    date.getMonth() + 1;
-
-  const d =
-    date.getDate();
+  const y = date.getFullYear();
+  const m = date.getMonth() + 1;
+  const d = date.getDate();
 
   return `${y}/${m}/${d}`;
 }
 
 
-// ------------------------------
-// 曜日取得
-// ------------------------------
 function getWeekdayShort(dateString) {
+  if (!dateString) return "";
 
-  if (!dateString) {
-    return "";
-  }
-
-  const date =
-    new Date(dateString);
+  const date = new Date(dateString);
 
   if (Number.isNaN(date.getTime())) {
     return "";
@@ -211,19 +135,9 @@ function getWeekdayShort(dateString) {
 }
 
 
-// ------------------------------
-// 日付＋曜日
-//
-// 例
-// 2026/8/25（火）
-// ------------------------------
 function formatDateWithWeekday(dateString) {
-
-  const dateSlash =
-    formatDateSlash(dateString);
-
-  const weekday =
-    getWeekdayShort(dateString);
+  const dateSlash = formatDateSlash(dateString);
+  const weekday = getWeekdayShort(dateString);
 
   if (!dateSlash || !weekday) {
     return "日付を選択してください";
@@ -233,31 +147,20 @@ function formatDateWithWeekday(dateString) {
 }
 
 
-// ------------------------------
-// 日付欄の下に曜日表示
-// ------------------------------
 function updateDatePreview() {
-
   els.datePreview.textContent =
-    formatDateWithWeekday(
-      els.workDate.value
-    );
+    formatDateWithWeekday(els.workDate.value);
 }
 
 
 // ==============================
 // 作業員ボタン生成
 // ==============================
-
 function createWorkerSections() {
-
   els.workerSections.innerHTML = "";
 
   categories.forEach((category) => {
 
-    // --------------------------
-    // 分類全体
-    // --------------------------
     const block =
       document.createElement("div");
 
@@ -265,22 +168,17 @@ function createWorkerSections() {
       "worker-block";
 
 
-    // --------------------------
-    // 見出し
-    // --------------------------
     const title =
       document.createElement("h3");
 
     title.className =
       "worker-title";
 
+    // 9名＋手入力1枠で10枠
     title.textContent =
-      `${category.label}（${workerNames.length}名＋予備）`;
+      `${category.label}（10名）`;
 
 
-    // --------------------------
-    // 作業員ボタン配置エリア
-    // --------------------------
     const grid =
       document.createElement("div");
 
@@ -289,7 +187,7 @@ function createWorkerSections() {
 
 
     // ==========================
-    // 固定作業員
+    // 固定作業員9名
     // ==========================
     workerNames.forEach((name) => {
 
@@ -312,9 +210,6 @@ function createWorkerSections() {
         name;
 
 
-      // ------------------------
-      // 作業員ボタンを押した時
-      // ------------------------
       button.addEventListener(
         "click",
         () => {
@@ -335,58 +230,46 @@ function createWorkerSections() {
 
 
     // ==========================
-    // 予備作業員入力欄
+    // 10個目の手入力欄
+    // 田中昇翔の後ろに表示
     // ==========================
-
-    const customWrap =
-      document.createElement("div");
-
-    customWrap.className =
-      "custom-worker-wrap";
-
-
-    const customInput =
+    const manualInput =
       document.createElement("input");
 
-    customInput.type =
+    manualInput.type =
       "text";
 
-    customInput.className =
-      "custom-worker-input";
+    manualInput.className =
+      "worker-manual-input";
 
-    customInput.placeholder =
-      "予備：氏名を入力";
+    manualInput.placeholder =
+      "氏名を入力";
 
-    customInput.dataset.category =
+    manualInput.dataset.category =
       category.key;
 
 
-    // --------------------------
-    // 予備作業員の氏名入力
-    // --------------------------
-    customInput.addEventListener(
+    // ==========================
+    // 手入力欄の処理
+    // ==========================
+    manualInput.addEventListener(
       "input",
       () => {
 
         const oldName =
-          customWorkerNames[
+          manualWorkers[
             category.key
           ];
 
         const newName =
-          customInput.value.trim();
+          manualInput.value.trim();
 
 
         // ----------------------
-        // 以前入力されていた
-        // 予備作業員を削除
+        // 前に入力していた名前を
+        // 選択一覧から削除
         // ----------------------
-        if (
-          oldName &&
-          selectedWorkers[
-            category.key
-          ].has(oldName)
-        ) {
+        if (oldName) {
 
           selectedWorkers[
             category.key
@@ -396,16 +279,16 @@ function createWorkerSections() {
 
 
         // ----------------------
-        // 新しい氏名を保存
+        // 新しい名前を保存
         // ----------------------
-        customWorkerNames[
+        manualWorkers[
           category.key
         ] = newName;
 
 
         // ----------------------
         // 氏名が入力されていれば
-        // 自動的に選択扱い
+        // 自動的に選択状態
         // ----------------------
         if (newName) {
 
@@ -413,13 +296,13 @@ function createWorkerSections() {
             category.key
           ].add(newName);
 
-          customWrap.classList.add(
+          manualInput.classList.add(
             "active"
           );
 
         } else {
 
-          customWrap.classList.remove(
+          manualInput.classList.remove(
             "active"
           );
 
@@ -429,18 +312,12 @@ function createWorkerSections() {
     );
 
 
-    customWrap.appendChild(
-      customInput
-    );
-
+    // 固定9名の後ろに追加
     grid.appendChild(
-      customWrap
+      manualInput
     );
 
 
-    // --------------------------
-    // 画面へ追加
-    // --------------------------
     block.appendChild(
       title
     );
@@ -458,10 +335,8 @@ function createWorkerSections() {
 
 
 // ==============================
-// 固定作業員
-// 選択／解除
+// 固定作業員 選択／解除
 // ==============================
-
 function toggleWorker(
   categoryKey,
   workerName,
@@ -474,9 +349,6 @@ function toggleWorker(
     ];
 
 
-  // ----------------------------
-  // 選択済みなら解除
-  // ----------------------------
   if (set.has(workerName)) {
 
     set.delete(workerName);
@@ -485,12 +357,7 @@ function toggleWorker(
       "active"
     );
 
-  }
-
-  // ----------------------------
-  // 未選択なら選択
-  // ----------------------------
-  else {
+  } else {
 
     set.add(workerName);
 
@@ -505,7 +372,6 @@ function toggleWorker(
 // ==============================
 // 入力値取得
 // ==============================
-
 function getInputValue(el) {
 
   if (!el) {
@@ -517,9 +383,8 @@ function getInputValue(el) {
 
 
 // ==============================
-// 入力内容をまとめて取得
+// フォームデータ取得
 // ==============================
-
 function getFormData() {
 
   return {
@@ -617,9 +482,8 @@ function getFormData() {
 
 
 // ==============================
-// 選択作業員人数
+// 選択人数
 // ==============================
-
 function getSelectedCount(data) {
 
   return (
@@ -632,9 +496,8 @@ function getSelectedCount(data) {
 
 
 // ==============================
-// 作業員名表示
+// 作業員名を連結
 // ==============================
-
 function joinWorkerNames(list) {
 
   return (
@@ -648,7 +511,6 @@ function joinWorkerNames(list) {
 // ==============================
 // 確認用テキスト
 // ==============================
-
 function buildSummaryText(data) {
 
   return [
@@ -732,22 +594,18 @@ function buildSummaryText(data) {
 
 
 // ==============================
-// HTML表示用
+// 確認画面HTML
 // ==============================
-
 function buildSummaryHTML(data) {
 
   return `
 
     <div>
-      <strong>
-        【基本情報】
-      </strong>
+      <strong>【基本情報】</strong>
     </div>
 
     <div>
-      日付：
-      ${data.workDateText}
+      日付：${data.workDateText}
     </div>
 
     <div>
@@ -804,8 +662,7 @@ function buildSummaryHTML(data) {
         (
           data.workContent ||
           "未入力"
-        )
-        .replace(
+        ).replace(
           /\n/g,
           "<br>"
         )
@@ -878,7 +735,6 @@ function buildSummaryHTML(data) {
 // ==============================
 // 確認ボタン
 // ==============================
-
 function showSummary() {
 
   const data =
@@ -890,9 +746,8 @@ function showSummary() {
 
 
 // ==============================
-// メール送信用テキスト
+// メール本文作成
 // ==============================
-
 function buildMailBody(data) {
 
   return [
@@ -983,16 +838,11 @@ function buildMailBody(data) {
 // ==============================
 // 送信
 // ==============================
-
 async function sendReport() {
 
   const data =
     getFormData();
 
-
-  // ============================
-  // 必須入力チェック
-  // ============================
 
   if (!data.workDate) {
 
@@ -1056,10 +906,6 @@ async function sendReport() {
   }
 
 
-  // ============================
-  // EmailJS確認
-  // ============================
-
   if (
     typeof emailjs ===
     "undefined"
@@ -1079,10 +925,6 @@ async function sendReport() {
   const mailBody =
     buildMailBody(data);
 
-
-  // ============================
-  // EmailJS送信
-  // ============================
 
   try {
 
@@ -1107,18 +949,9 @@ async function sendReport() {
     );
 
 
-    // --------------------------
-    // 送信内容を確認欄に表示
-    // --------------------------
-
     els.summaryArea.innerHTML =
       buildSummaryHTML(data);
 
-
-    // --------------------------
-    // 画面中央に
-    // 「送信完了」を表示
-    // --------------------------
 
     if (
       typeof window
@@ -1139,11 +972,6 @@ async function sendReport() {
     }
 
 
-    // --------------------------
-    // 送信完了表示が消えた後
-    // 入力欄をクリア
-    // --------------------------
-
     setTimeout(
       () => {
 
@@ -1154,10 +982,6 @@ async function sendReport() {
     );
 
   }
-
-  // ============================
-  // 送信失敗
-  // ============================
 
   catch (error) {
 
@@ -1171,10 +995,6 @@ async function sendReport() {
     );
 
   }
-
-  // ============================
-  // 最後にボタンを元へ戻す
-  // ============================
 
   finally {
 
@@ -1191,12 +1011,7 @@ async function sendReport() {
 // ==============================
 // 全クリア
 // ==============================
-
 function clearAll() {
-
-  // ----------------------------
-  // 基本情報
-  // ----------------------------
 
   els.destinationCompany.value =
     "";
@@ -1220,10 +1035,6 @@ function clearAll() {
     "";
 
 
-  // ----------------------------
-  // 作業内容
-  // ----------------------------
-
   const workContent =
     document.getElementById(
       "work-content"
@@ -1237,91 +1048,53 @@ function clearAll() {
   }
 
 
-  // ----------------------------
-  // 作業員選択状態を削除
-  // ----------------------------
-
   Object.keys(
     selectedWorkers
-  ).forEach((key) => {
+  ).forEach(
+    (key) => {
 
-    selectedWorkers[
-      key
-    ].clear();
+      selectedWorkers[
+        key
+      ].clear();
 
-  });
+      manualWorkers[
+        key
+      ] = "";
 
+    }
+  );
 
-  // ----------------------------
-  // 予備作業員名を削除
-  // ----------------------------
-
-  Object.keys(
-    customWorkerNames
-  ).forEach((key) => {
-
-    customWorkerNames[
-      key
-    ] = "";
-
-  });
-
-
-  // ----------------------------
-  // 固定作業員ボタン
-  // 緑色を解除
-  // ----------------------------
 
   document.querySelectorAll(
     ".worker-button"
-  ).forEach((button) => {
+  ).forEach(
+    (button) => {
 
-    button.classList.remove(
-      "active"
-    );
+      button.classList.remove(
+        "active"
+      );
 
-  });
+    }
+  );
 
-
-  // ----------------------------
-  // 予備作業員入力欄を空欄へ
-  // ----------------------------
 
   document.querySelectorAll(
-    ".custom-worker-input"
-  ).forEach((input) => {
+    ".worker-manual-input"
+  ).forEach(
+    (input) => {
 
-    input.value =
-      "";
+      input.value =
+        "";
 
-  });
+      input.classList.remove(
+        "active"
+      );
 
+    }
+  );
 
-  // ----------------------------
-  // 予備欄の選択表示解除
-  // ----------------------------
-
-  document.querySelectorAll(
-    ".custom-worker-wrap"
-  ).forEach((wrap) => {
-
-    wrap.classList.remove(
-      "active"
-    );
-
-  });
-
-
-  // ----------------------------
-  // 日付を今日に戻す
-  // ----------------------------
 
   setTodayDate();
-
-
-  // ----------------------------
-  // 確認表示を初期化
-  // ----------------------------
 
   els.summaryArea.textContent =
     "ここに表示";
@@ -1329,12 +1102,8 @@ function clearAll() {
 
 
 // ==============================
-// 時刻を指定単位へ丸める
-//
-// 初期値
-// 300秒 = 5分
+// 時刻を5分単位へ丸める
 // ==============================
-
 function roundTimeStringToStep(
   timeString,
   stepSeconds = 300
@@ -1417,12 +1186,7 @@ function roundTimeStringToStep(
 // ==============================
 // イベント登録
 // ==============================
-
 function bindEvents() {
-
-  // ----------------------------
-  // 日付変更
-  // ----------------------------
 
   els.workDate.addEventListener(
     "change",
@@ -1430,43 +1194,23 @@ function bindEvents() {
   );
 
 
-  // ----------------------------
-  // 確認
-  // ----------------------------
-
-  els.summaryButton
-    .addEventListener(
-      "click",
-      showSummary
-    );
+  els.summaryButton.addEventListener(
+    "click",
+    showSummary
+  );
 
 
-  // ----------------------------
-  // クリア
-  // ----------------------------
-
-  els.clearButton
-    .addEventListener(
-      "click",
-      clearAll
-    );
+  els.clearButton.addEventListener(
+    "click",
+    clearAll
+  );
 
 
-  // ----------------------------
-  // 送信
-  // ----------------------------
+  els.excelButton.addEventListener(
+    "click",
+    sendReport
+  );
 
-  els.excelButton
-    .addEventListener(
-      "click",
-      sendReport
-    );
-
-
-  // ============================
-  // 始業時間
-  // 5分単位
-  // ============================
 
   if (els.startTime) {
 
@@ -1505,11 +1249,6 @@ function bindEvents() {
 
   }
 
-
-  // ============================
-  // 終業時間
-  // 5分単位
-  // ============================
 
   if (els.endTime) {
 
@@ -1553,12 +1292,7 @@ function bindEvents() {
 // ==============================
 // 初期化
 // ==============================
-
 function init() {
-
-  // ----------------------------
-  // EmailJS初期化
-  // ----------------------------
 
   if (
     typeof emailjs !==
@@ -1567,40 +1301,22 @@ function init() {
   ) {
 
     emailjs.init({
-
       publicKey:
         EMAILJS_PUBLIC_KEY
-
     });
 
   }
 
 
-  // ----------------------------
-  // 作業員ボタン生成
-  // ----------------------------
-
   createWorkerSections();
-
-
-  // ----------------------------
-  // 今日の日付
-  // ----------------------------
 
   setTodayDate();
 
-
-  // ----------------------------
-  // ボタン等のイベント登録
-  // ----------------------------
-
   bindEvents();
-
 }
 
 
 // ==============================
-// アプリ起動
+// 起動
 // ==============================
-
 init();
