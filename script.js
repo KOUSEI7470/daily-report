@@ -1,3 +1,4 @@
+
 document.title = "TEST-20260421";
 
 // ==============================
@@ -8,8 +9,7 @@ const EMAILJS_SERVICE_ID = window.EMAILJS_CONFIG?.serviceId || "";
 const EMAILJS_TEMPLATE_ID = window.EMAILJS_CONFIG?.templateId || "";
 
 // ==============================
-// 作業員名
-// 冨山航生を削除
+// 作業員名（固定10名）
 // ==============================
 const workerNames = [
   "藤田大伸",
@@ -20,7 +20,8 @@ const workerNames = [
   "小野義光",
   "田中大海",
   "稲垣英人",
-  "田中昇翔"
+  "田中昇翔",
+  "野津将之"
 ];
 
 // ==============================
@@ -44,13 +45,13 @@ const selectedWorkers = {
 };
 
 // ==============================
-// 手入力作業員
+// 手入力作業員（各分類2名分）
 // ==============================
 const manualWorkers = {
-  diving: "",
-  land: "",
-  standby: "",
-  move: ""
+  diving: ["", ""],
+  land: ["", ""],
+  standby: ["", ""],
+  move: ["", ""]
 };
 
 // ==============================
@@ -87,18 +88,23 @@ function setTodayDate() {
 
 function formatDateSlash(dateString) {
   if (!dateString) return "";
+
   const date = new Date(dateString);
   if (Number.isNaN(date.getTime())) return "";
+
   const y = date.getFullYear();
   const m = date.getMonth() + 1;
   const d = date.getDate();
+
   return `${y}/${m}/${d}`;
 }
 
 function getWeekdayShort(dateString) {
   if (!dateString) return "";
+
   const date = new Date(dateString);
   if (Number.isNaN(date.getTime())) return "";
+
   const weekdays = ["日", "月", "火", "水", "木", "金", "土"];
   return weekdays[date.getDay()];
 }
@@ -133,12 +139,13 @@ function createWorkerSections() {
 
     const title = document.createElement("h3");
     title.className = "worker-title";
-    title.textContent = `${category.label}（10名）`;
+    title.textContent =
+      `${category.label}（固定10名＋手入力2名）`;
 
     const grid = document.createElement("div");
     grid.className = "worker-grid";
 
-    // 固定作業員9名
+    // 固定作業員10名
     workerNames.forEach((name) => {
 
       const button = document.createElement("button");
@@ -161,113 +168,75 @@ function createWorkerSections() {
     });
 
     // ==============================
-    // 10個目
-    // 田中昇翔の後ろに手入力欄
+    // 固定10名の後に手入力欄を2名分追加
     // ==============================
-    const manualInput =
-      document.createElement("input");
+    for (let index = 0; index < 2; index++) {
 
-    manualInput.type = "text";
-    manualInput.className =
-      "worker-manual-input";
+      const manualInput = document.createElement("input");
 
-    manualInput.placeholder =
-      "氏名を入力";
+      manualInput.type = "text";
+      manualInput.className = "worker-manual-input";
+      manualInput.placeholder = "氏名を追加";
+      manualInput.dataset.category = category.key;
 
-    manualInput.dataset.category =
-      category.key;
+      manualInput.setAttribute(
+        "aria-label",
+        `${category.label} 氏名を追加 ${index + 1}`
+      );
 
-    manualInput.addEventListener(
-      "input",
-      () => {
+      manualInput.addEventListener("input", () => {
 
-        const oldName =
-          manualWorkers[category.key];
-
-        const newName =
+        manualWorkers[category.key][index] =
           manualInput.value.trim();
 
-        // 前に入力していた名前を削除
-        if (oldName) {
-          selectedWorkers[
-            category.key
-          ].delete(oldName);
-        }
+        manualInput.classList.toggle(
+          "active",
+          Boolean(manualWorkers[category.key][index])
+        );
 
-        manualWorkers[
-          category.key
-        ] = newName;
+        syncCategoryWorkers(category.key);
+      });
 
-        // 新しい名前を選択状態へ
-        if (newName) {
+      grid.appendChild(manualInput);
+    }
 
-          selectedWorkers[
-            category.key
-          ].add(newName);
-
-          manualInput.classList.add(
-            "active"
-          );
-
-        } else {
-
-          manualInput.classList.remove(
-            "active"
-          );
-        }
-
-      }
-    );
-
-    grid.appendChild(
-      manualInput
-    );
-
-    block.appendChild(
-      title
-    );
-
-    block.appendChild(
-      grid
-    );
-
-    els.workerSections.appendChild(
-      block
-    );
+    block.appendChild(title);
+    block.appendChild(grid);
+    els.workerSections.appendChild(block);
 
   });
 }
 
 // ==============================
+// 固定ボタンと手入力欄の選択状態を同期
+// ==============================
+function syncCategoryWorkers(categoryKey) {
+
+  const names = new Set();
+
+  document.querySelectorAll(
+    `.worker-button.active[data-category="${categoryKey}"]`
+  ).forEach((button) => {
+    names.add(button.dataset.name);
+  });
+
+  manualWorkers[categoryKey].forEach((name) => {
+    if (name) {
+      names.add(name);
+    }
+  });
+
+  selectedWorkers[categoryKey] = names;
+}
+
+// ==============================
 // 固定作業員 選択／解除
 // ==============================
-function toggleWorker(
-  categoryKey,
-  workerName,
-  buttonEl
-) {
+function toggleWorker(categoryKey, workerName, buttonEl) {
 
-  const set =
-    selectedWorkers[
-      categoryKey
-    ];
+  buttonEl.classList.toggle("active");
 
-  if (set.has(workerName)) {
-
-    set.delete(workerName);
-
-    buttonEl.classList.remove(
-      "active"
-    );
-
-  } else {
-
-    set.add(workerName);
-
-    buttonEl.classList.add(
-      "active"
-    );
-  }
+  syncCategoryWorkers(categoryKey);
 }
 
 // ==============================
@@ -282,92 +251,60 @@ function getFormData() {
   return {
 
     workDate:
-      getInputValue(
-        els.workDate
-      ),
+      getInputValue(els.workDate),
 
     workDateSlash:
       formatDateSlash(
-        getInputValue(
-          els.workDate
-        )
+        getInputValue(els.workDate)
       ),
 
     weekday:
       getWeekdayShort(
-        getInputValue(
-          els.workDate
-        )
+        getInputValue(els.workDate)
       ),
 
     workDateText:
       formatDateWithWeekday(
-        getInputValue(
-          els.workDate
-        )
+        getInputValue(els.workDate)
       ),
 
     destinationCompany:
-      getInputValue(
-        els.destinationCompany
-      ),
+      getInputValue(els.destinationCompany),
 
     siteName:
-      getInputValue(
-        els.siteName
-      ),
+      getInputValue(els.siteName),
 
     meetingPlace:
-      getInputValue(
-        els.meetingPlace
-      ),
+      getInputValue(els.meetingPlace),
 
     primeCompany:
-      getInputValue(
-        els.primeCompany
-      ),
+      getInputValue(els.primeCompany),
 
     startTime:
-      getInputValue(
-        els.startTime
-      ),
+      getInputValue(els.startTime),
 
     endTime:
-      getInputValue(
-        els.endTime
-      ),
+      getInputValue(els.endTime),
 
     workContent:
       getInputValue(
-        document.getElementById(
-          "work-content"
-        )
+        document.getElementById("work-content")
       ),
 
     otherNote:
-      getInputValue(
-        els.otherNote
-      ),
+      getInputValue(els.otherNote),
 
     diving:
-      Array.from(
-        selectedWorkers.diving
-      ),
+      Array.from(selectedWorkers.diving),
 
     land:
-      Array.from(
-        selectedWorkers.land
-      ),
+      Array.from(selectedWorkers.land),
 
     standby:
-      Array.from(
-        selectedWorkers.standby
-      ),
+      Array.from(selectedWorkers.standby),
 
     move:
-      Array.from(
-        selectedWorkers.move
-      )
+      Array.from(selectedWorkers.move)
   };
 }
 
@@ -385,6 +322,7 @@ function getSelectedCount(data) {
 // 整理表示
 // ==============================
 function joinWorkerNames(list) {
+
   return list.length > 0
     ? list.join("、")
     : "なし";
@@ -399,33 +337,27 @@ function buildSummaryText(data) {
     `日付：${data.workDateText}`,
 
     `行先会社名：${
-      data.destinationCompany ||
-      "未入力"
+      data.destinationCompany || "未入力"
     }`,
 
     `現場名：${
-      data.siteName ||
-      "未入力"
+      data.siteName || "未入力"
     }`,
 
     `集合場所：${
-      data.meetingPlace ||
-      "未入力"
+      data.meetingPlace || "未入力"
     }`,
 
     `元請会社名：${
-      data.primeCompany ||
-      "未入力"
+      data.primeCompany || "未入力"
     }`,
 
     `始業時間：${
-      data.startTime ||
-      "未入力"
+      data.startTime || "未入力"
     }`,
 
     `終業時間：${
-      data.endTime ||
-      "未入力"
+      data.endTime || "未入力"
     }`,
 
     "",
@@ -433,35 +365,26 @@ function buildSummaryText(data) {
     "【作業員分類】",
 
     `潜水作業員：${
-      joinWorkerNames(
-        data.diving
-      )
+      joinWorkerNames(data.diving)
     }`,
 
     `陸上作業員：${
-      joinWorkerNames(
-        data.land
-      )
+      joinWorkerNames(data.land)
     }`,
 
     `待機：${
-      joinWorkerNames(
-        data.standby
-      )
+      joinWorkerNames(data.standby)
     }`,
 
     `移動：${
-      joinWorkerNames(
-        data.move
-      )
+      joinWorkerNames(data.move)
     }`,
 
     "",
 
     "【その他】",
 
-    data.otherNote ||
-      "未入力"
+    data.otherNote || "未入力"
 
   ].join("\n");
 }
@@ -480,130 +403,84 @@ function buildSummaryHTML(data) {
 
     <div>
       行先会社名：
-      ${
-        data.destinationCompany ||
-        "未入力"
-      }
+      ${data.destinationCompany || "未入力"}
     </div>
 
     <div>
       現場名：
-      ${
-        data.siteName ||
-        "未入力"
-      }
+      ${data.siteName || "未入力"}
     </div>
 
     <div>
       集合場所：
-      ${
-        data.meetingPlace ||
-        "未入力"
-      }
+      ${data.meetingPlace || "未入力"}
     </div>
 
     <div>
       元請会社名：
-      ${
-        data.primeCompany ||
-        "未入力"
-      }
+      ${data.primeCompany || "未入力"}
     </div>
 
     <div>
       始業時間：
-      ${
-        data.startTime ||
-        "未入力"
-      }
+      ${data.startTime || "未入力"}
     </div>
 
     <div>
       終業時間：
-      ${
-        data.endTime ||
-        "未入力"
-      }
+      ${data.endTime || "未入力"}
     </div>
 
     <div>
       作業内容：
       ${
         (
-          data.workContent ||
-          "未入力"
-        ).replace(
-          /\n/g,
-          "<br>"
-        )
+          data.workContent || "未入力"
+        ).replace(/\n/g, "<br>")
       }
     </div>
 
     <br>
 
     <div>
-      <strong>
-        【作業員分類】
-      </strong>
+      <strong>【作業員分類】</strong>
     </div>
 
     <div>
       潜水作業員：
-      ${
-        joinWorkerNames(
-          data.diving
-        )
-      }
+      ${joinWorkerNames(data.diving)}
     </div>
 
     <div>
       陸上作業員：
-      ${
-        joinWorkerNames(
-          data.land
-        )
-      }
+      ${joinWorkerNames(data.land)}
     </div>
 
     <div>
       待機：
-      ${
-        joinWorkerNames(
-          data.standby
-        )
-      }
+      ${joinWorkerNames(data.standby)}
     </div>
 
     <div>
       移動：
-      ${
-        joinWorkerNames(
-          data.move
-        )
-      }
+      ${joinWorkerNames(data.move)}
     </div>
 
     <br>
 
     <div>
-      <strong>
-        【その他】
-      </strong>
+      <strong>【その他】</strong>
     </div>
 
     <div>
-      ${
-        data.otherNote ||
-        "未入力"
-      }
+      ${data.otherNote || "未入力"}
     </div>
   `;
 }
 
 function showSummary() {
 
-  const data =
-    getFormData();
+  const data = getFormData();
 
   els.summaryArea.innerHTML =
     buildSummaryHTML(data);
@@ -621,43 +498,35 @@ function buildMailBody(data) {
     "",
 
     `日付：${
-      data.workDateText ||
-      "未入力"
+      data.workDateText || "未入力"
     }`,
 
     `行先会社名：${
-      data.destinationCompany ||
-      "未入力"
+      data.destinationCompany || "未入力"
     }`,
 
     `現場名：${
-      data.siteName ||
-      "未入力"
+      data.siteName || "未入力"
     }`,
 
     `集合場所：${
-      data.meetingPlace ||
-      "未入力"
+      data.meetingPlace || "未入力"
     }`,
 
     `元請会社名：${
-      data.primeCompany ||
-      "未入力"
+      data.primeCompany || "未入力"
     }`,
 
     `始業時間：${
-      data.startTime ||
-      "未入力"
+      data.startTime || "未入力"
     }`,
 
     `終業時間：${
-      data.endTime ||
-      "未入力"
+      data.endTime || "未入力"
     }`,
 
     `作業内容：${
-      data.workContent ||
-      "未入力"
+      data.workContent || "未入力"
     }`,
 
     "",
@@ -665,35 +534,26 @@ function buildMailBody(data) {
     "【作業員分類】",
 
     `潜水作業員：${
-      joinWorkerNames(
-        data.diving
-      )
+      joinWorkerNames(data.diving)
     }`,
 
     `陸上作業員：${
-      joinWorkerNames(
-        data.land
-      )
+      joinWorkerNames(data.land)
     }`,
 
     `待機：${
-      joinWorkerNames(
-        data.standby
-      )
+      joinWorkerNames(data.standby)
     }`,
 
     `移動：${
-      joinWorkerNames(
-        data.move
-      )
+      joinWorkerNames(data.move)
     }`,
 
     "",
 
     "【その他】",
 
-    data.otherNote ||
-      "未入力"
+    data.otherNote || "未入力"
 
   ].join("\n");
 }
@@ -703,74 +563,47 @@ function buildMailBody(data) {
 // ==============================
 async function sendReport() {
 
-  const data =
-    getFormData();
+  const data = getFormData();
 
   if (!data.workDate) {
 
-    alert(
-      "日付を入力してください。"
-    );
-
+    alert("日付を入力してください。");
     return;
   }
 
   if (!data.destinationCompany) {
 
-    alert(
-      "行先会社名を入力してください。"
-    );
-
+    alert("行先会社名を入力してください。");
     return;
   }
 
   if (!data.siteName) {
 
-    alert(
-      "現場名を入力してください。"
-    );
-
+    alert("現場名を入力してください。");
     return;
   }
 
   if (!data.startTime) {
 
-    alert(
-      "始業時間を入力してください。"
-    );
-
+    alert("始業時間を入力してください。");
     return;
   }
 
   if (!data.endTime) {
 
-    alert(
-      "終業時間を入力してください。"
-    );
-
+    alert("終業時間を入力してください。");
     return;
   }
 
-  if (
-    getSelectedCount(data) === 0
-  ) {
+  if (getSelectedCount(data) === 0) {
 
-    alert(
-      "作業員を1人以上選択してください。"
-    );
-
+    alert("作業員を1人以上選択してください。");
     return;
   }
 
-  if (
-    typeof emailjs ===
-    "undefined"
-  ) {
+  if (typeof emailjs === "undefined") {
 
-    alert(
-      "EmailJSが読み込まれていません。"
-    );
-
+    alert("EmailJSが読み込まれていません。");
     return;
   }
 
@@ -782,21 +615,16 @@ async function sendReport() {
 
   try {
 
-    els.excelButton.disabled =
-      true;
+    els.excelButton.disabled = true;
 
     els.excelButton.textContent =
       "送信中...";
 
     await emailjs.send(
-
       EMAILJS_SERVICE_ID,
-
       EMAILJS_TEMPLATE_ID,
-
       {
-        message:
-          mailBody
+        message: mailBody
       }
     );
 
@@ -804,30 +632,20 @@ async function sendReport() {
       buildSummaryHTML(data);
 
     if (
-      typeof window
-        .showSendComplete ===
+      typeof window.showSendComplete ===
       "function"
     ) {
 
-      window.showSendComplete(
-        2500
-      );
+      window.showSendComplete(2500);
 
     } else {
 
-      alert(
-        "送信完了"
-      );
+      alert("送信完了");
     }
 
-    setTimeout(
-      () => {
-
-        clearAll();
-
-      },
-      2800
-    );
+    setTimeout(() => {
+      clearAll();
+    }, 2800);
 
   } catch (error) {
 
@@ -836,14 +654,11 @@ async function sendReport() {
       error
     );
 
-    alert(
-      "送信に失敗しました。"
-    );
+    alert("送信に失敗しました。");
 
   } finally {
 
-    els.excelButton.disabled =
-      false;
+    els.excelButton.disabled = false;
 
     els.excelButton.textContent =
       originalText;
@@ -855,63 +670,44 @@ async function sendReport() {
 // ==============================
 function clearAll() {
 
-  els.destinationCompany.value =
-    "";
+  els.destinationCompany.value = "";
 
-  els.siteName.value =
-    "";
+  els.siteName.value = "";
 
-  els.meetingPlace.value =
-    "";
+  els.meetingPlace.value = "";
 
-  els.primeCompany.value =
-    "";
+  els.primeCompany.value = "";
 
-  els.startTime.value =
-    "";
+  els.startTime.value = "";
 
-  els.endTime.value =
-    "";
+  els.endTime.value = "";
 
   document.getElementById(
     "work-content"
   ).value = "";
 
-  els.otherNote.value =
-    "";
+  els.otherNote.value = "";
 
-  Object.keys(
-    selectedWorkers
-  ).forEach((key) => {
+  Object.keys(selectedWorkers).forEach((key) => {
 
-    selectedWorkers[
-      key
-    ].clear();
+    selectedWorkers[key].clear();
 
-    manualWorkers[
-      key
-    ] = "";
+    manualWorkers[key] = ["", ""];
   });
 
   document.querySelectorAll(
     ".worker-button"
   ).forEach((button) => {
 
-    button.classList.remove(
-      "active"
-    );
+    button.classList.remove("active");
   });
 
   document.querySelectorAll(
     ".worker-manual-input"
   ).forEach((input) => {
 
-    input.value =
-      "";
-
-    input.classList.remove(
-      "active"
-    );
+    input.value = "";
+    input.classList.remove("active");
   });
 
   setTodayDate();
@@ -920,6 +716,9 @@ function clearAll() {
     "ここに表示";
 }
 
+// ==============================
+// 時刻を5分単位に丸める
+// ==============================
 function roundTimeStringToStep(
   timeString,
   stepSeconds = 300
@@ -927,65 +726,37 @@ function roundTimeStringToStep(
 
   if (!timeString) return "";
 
-  const [
-    hours,
-    minutes
-  ] =
-    timeString
-      .split(":")
-      .map(Number);
+  const [hours, minutes] =
+    timeString.split(":").map(Number);
 
   if (
     Number.isNaN(hours) ||
     Number.isNaN(minutes)
   ) {
-
     return timeString;
   }
 
   const totalSeconds =
-    hours * 3600 +
-    minutes * 60;
+    hours * 3600 + minutes * 60;
 
   const steppedSeconds =
     Math.round(
-      totalSeconds /
-      stepSeconds
-    ) *
-    stepSeconds;
+      totalSeconds / stepSeconds
+    ) * stepSeconds;
 
   const steppedHours =
     Math.floor(
-      (
-        steppedSeconds %
-        86400
-      ) /
-      3600
+      (steppedSeconds % 86400) / 3600
     );
 
   const steppedMinutes =
     Math.floor(
-      (
-        steppedSeconds %
-        3600
-      ) /
-      60
+      (steppedSeconds % 3600) / 60
     );
 
   return (
-    `${String(
-      steppedHours
-    ).padStart(
-      2,
-      "0"
-    )}:` +
-
-    `${String(
-      steppedMinutes
-    ).padStart(
-      2,
-      "0"
-    )}`
+    `${String(steppedHours).padStart(2, "0")}:` +
+    `${String(steppedMinutes).padStart(2, "0")}`
   );
 }
 
@@ -1021,15 +792,14 @@ function bindEvents() {
       "300"
     );
 
-    const snapStartTime =
-      () => {
+    const snapStartTime = () => {
 
-        els.startTime.value =
-          roundTimeStringToStep(
-            els.startTime.value,
-            300
-          );
-      };
+      els.startTime.value =
+        roundTimeStringToStep(
+          els.startTime.value,
+          300
+        );
+    };
 
     els.startTime.addEventListener(
       "input",
@@ -1054,15 +824,14 @@ function bindEvents() {
       "300"
     );
 
-    const snapEndTime =
-      () => {
+    const snapEndTime = () => {
 
-        els.endTime.value =
-          roundTimeStringToStep(
-            els.endTime.value,
-            300
-          );
-      };
+      els.endTime.value =
+        roundTimeStringToStep(
+          els.endTime.value,
+          300
+        );
+    };
 
     els.endTime.addEventListener(
       "input",
@@ -1087,14 +856,12 @@ function bindEvents() {
 function init() {
 
   if (
-    typeof emailjs !==
-      "undefined" &&
+    typeof emailjs !== "undefined" &&
     EMAILJS_PUBLIC_KEY
   ) {
 
     emailjs.init({
-      publicKey:
-        EMAILJS_PUBLIC_KEY
+      publicKey: EMAILJS_PUBLIC_KEY
     });
   }
 
