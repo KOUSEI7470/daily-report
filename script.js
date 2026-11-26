@@ -389,6 +389,20 @@ function buildSummaryText(data) {
   ].join("\n");
 }
 
+// 入力した文字列がHTMLの命令として解釈されないようにする
+function escapeHTML(value) {
+  return String(value).replace(/[&<>"']/g, (char) => {
+    const entities = {
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#39;"
+    };
+    return entities[char];
+  });
+}
+
 function buildSummaryHTML(data) {
 
   return `
@@ -398,45 +412,44 @@ function buildSummaryHTML(data) {
     </div>
 
     <div>
-      日付：${data.workDateText}
+      日付：${escapeHTML(data.workDateText)}
     </div>
 
     <div>
       行先会社名：
-      ${data.destinationCompany || "未入力"}
+      ${escapeHTML(data.destinationCompany || "未入力")}
     </div>
 
     <div>
       現場名：
-      ${data.siteName || "未入力"}
+      ${escapeHTML(data.siteName || "未入力")}
     </div>
 
     <div>
       集合場所：
-      ${data.meetingPlace || "未入力"}
+      ${escapeHTML(data.meetingPlace || "未入力")}
     </div>
 
     <div>
       元請会社名：
-      ${data.primeCompany || "未入力"}
+      ${escapeHTML(data.primeCompany || "未入力")}
     </div>
 
     <div>
       始業時間：
-      ${data.startTime || "未入力"}
+      ${escapeHTML(data.startTime || "未入力")}
     </div>
 
     <div>
       終業時間：
-      ${data.endTime || "未入力"}
+      ${escapeHTML(data.endTime || "未入力")}
     </div>
 
     <div>
       作業内容：
       ${
-        (
-          data.workContent || "未入力"
-        ).replace(/\n/g, "<br>")
+        escapeHTML(data.workContent || "未入力")
+          .replace(/\n/g, "<br>")
       }
     </div>
 
@@ -448,22 +461,22 @@ function buildSummaryHTML(data) {
 
     <div>
       潜水作業員：
-      ${joinWorkerNames(data.diving)}
+      ${escapeHTML(joinWorkerNames(data.diving))}
     </div>
 
     <div>
       陸上作業員：
-      ${joinWorkerNames(data.land)}
+      ${escapeHTML(joinWorkerNames(data.land))}
     </div>
 
     <div>
       待機：
-      ${joinWorkerNames(data.standby)}
+      ${escapeHTML(joinWorkerNames(data.standby))}
     </div>
 
     <div>
       移動：
-      ${joinWorkerNames(data.move)}
+      ${escapeHTML(joinWorkerNames(data.move))}
     </div>
 
     <br>
@@ -473,7 +486,7 @@ function buildSummaryHTML(data) {
     </div>
 
     <div>
-      ${data.otherNote || "未入力"}
+      ${escapeHTML(data.otherNote || "未入力")}
     </div>
   `;
 }
